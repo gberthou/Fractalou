@@ -15,7 +15,7 @@ GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
 INCLUDE=-I"./"
 
-MAINFILE=main.cpp
+MAINFILE=main.cpp Quaternion.cpp
 
 CPPFILES=$(MAINFILE) 
 
