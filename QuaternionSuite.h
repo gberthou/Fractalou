@@ -8,7 +8,7 @@
 class QuaternionSuite
 {
 	public:
-		QuaternionSuite(sf::Uint32 id, const Quaternion &z0, const Quaternion &c);
+		QuaternionSuite(sf::Uint32 id, const Quaternion &z0);
 		virtual ~QuaternionSuite() = 0;
 		
 		sf::Uint32 GetIterationNumber(sf::Uint32 iterationsMax, double limit);
@@ -17,7 +17,6 @@ class QuaternionSuite
 		virtual Quaternion compute(const Quaternion &z) = 0;
 		
 		Quaternion z0;
-		Quaternion c;
 
 	private:
 		sf::Uint32 id;
