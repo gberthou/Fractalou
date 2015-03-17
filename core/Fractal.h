@@ -3,7 +3,11 @@
 
 #include <vector>
 
+#include <SFML/System.hpp>
+
 #include "FractalPart.h"
+
+typedef std::vector<FractalPart*> FractalPartCollection;
 
 class Fractal
 {
@@ -12,9 +16,10 @@ class Fractal
 		virtual ~Fractal();
 
 		void CreatePart(const std::vector<QuaternionSuite *> &suites);
+		void BuildResult(std::vector<sf::Uint32> &result) const;
 
 	private:
-		std::vector<FractalPart *> parts;
+		FractalPartCollection parts;
 };
 
 #endif

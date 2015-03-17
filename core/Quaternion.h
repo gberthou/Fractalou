@@ -10,9 +10,9 @@ class Quaternion
 		
 		double Length2(void);
 
-		Quaternion operator+(const Quaternion &q);
-		Quaternion operator-(const Quaternion &q);
-		Quaternion operator*(const Quaternion &q);
+		Quaternion operator+(const Quaternion &q) const;
+		Quaternion operator-(const Quaternion &q) const;
+		Quaternion operator*(const Quaternion &q) const;
 
 	private:
 		double x;

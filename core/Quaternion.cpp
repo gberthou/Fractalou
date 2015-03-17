@@ -25,17 +25,17 @@ double Quaternion::Length2(void)
 	return x*x + y*y + z*z + w*w;
 }
 
-Quaternion Quaternion::operator+(const Quaternion &q)
+Quaternion Quaternion::operator+(const Quaternion &q) const
 {
 	return Quaternion(x + q.x, y + q.y, z + q.z, w + q.w);
 }
 
-Quaternion Quaternion::operator-(const Quaternion &q)
+Quaternion Quaternion::operator-(const Quaternion &q) const
 {
 	return Quaternion(x - q.x, y - q.y, z - q.z, w - q.w);
 }
 
-Quaternion Quaternion::operator*(const Quaternion &q)
+Quaternion Quaternion::operator*(const Quaternion &q) const
 {
 	return Quaternion(x*q.x - y*q.y - z*q.z - w*q.w,
 					  x*q.y + y*q.x + z*q.w - w*q.z,

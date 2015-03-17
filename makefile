@@ -13,10 +13,13 @@ RELEASE=release
 
 GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
-INCLUDE=-I"./"
+INCLUDE=-I"./" -I"./core" -I"./view" -I"./network"
 
 COREDIR=core/
 COREFILES=Quaternion.cpp QuaternionSuite.cpp FractalPart.cpp Fractal.cpp
+
+FRACTALSDIR=core/fractals/
+FRACTALSFILES=QS_Julia.cpp
 
 VIEWDIR=view/
 VIEWFILES=
@@ -26,9 +29,7 @@ NETWORKFILES=
 
 MAINFILE=main.cpp
 
-CPPFILES=$(MAINFILE) $(addprefix $(COREDIR),$(COREFILES)) $(addprefix $(VIEWDIR),$(VIEWFILES)) $(addprefix $(NETWORKDIR),$(NETWORKFILES))
-
-
+CPPFILES=$(MAINFILE) $(addprefix $(COREDIR),$(COREFILES)) $(addprefix $(FRACTALSDIR),$(FRACTALSFILES)) $(addprefix $(VIEWDIR),$(VIEWFILES)) $(addprefix $(NETWORKDIR),$(NETWORKFILES))
 
 OBJ=$(CPPFILES:.cpp=.o)
 OBJABS=$(addprefix $(OBJDIR)/,$(OBJ))
@@ -45,10 +46,10 @@ FLAGSRELEASE=-O2
 LIBS=-lsfml-system -lsfml-window -lsfml-graphics
 
 $(DEBUG): $(OBJDEBUG)
-	$(GPP) $(CFLAGS) $(FLAGSDEBUG) $(LIBS) -o $(BINDEBUG) $(OBJDEBUG)
+	$(GPP) $(LIBS) -o $(BINDEBUG) $(OBJDEBUG)
 
 $(RELEASE): $(OBJRELEASE)
-	$(GPP) $(CFLAGS) $(FLAGSRELEASE) $(LIBS) -o $(BINRELEASE) $(OBJRELEASE)
+	$(GPP) $(LIBS) -o $(BINRELEASE) $(OBJRELEASE)
 
 $(CLEAN):
 	rm -f $(BINDEBUG) $(BINRELEASE) $(OBJDEBUG) $(OBJRELEASE)

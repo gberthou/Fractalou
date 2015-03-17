@@ -2,21 +2,14 @@
 
 QuaternionSuite::QuaternionSuite(sf::Uint32 aid, const Quaternion &az0):
 	z0(az0),
-	id(aid),
-	iterationNumber(0)
+	id(aid)
+{
+}
+
+QuaternionSuite::~QuaternionSuite()
 {
 }
 	
-void QuaternionSuite::SetIterationNumber(sf::Uint32 value)
-{
-	iterationNumber = value;
-}
-
-sf::Uint32 QuaternionSuite::GetIterationNumber(void) const
-{
-	return iterationNumber;
-}
-
 sf::Uint32 QuaternionSuite::ComputeIterationNumber(sf::Uint32 iterationsMax, double limit)
 {
 	sf::Uint32 iterations;
