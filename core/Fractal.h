@@ -15,8 +15,12 @@ class Fractal
 		Fractal();
 		virtual ~Fractal();
 
-		void CreatePart(const std::vector<QuaternionSuite *> &suites);
-		void BuildResult(std::vector<sf::Uint32> &result) const;
+		void CreatePart(const SuiteCollection &suites);
+		
+		// ComputeResults: Used by the slave
+		void ComputeResults(void);
+		
+		void BuildResult(ResultCollection &result) const;
 
 	private:
 		FractalPartCollection parts;

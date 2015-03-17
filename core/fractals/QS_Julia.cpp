@@ -10,7 +10,7 @@ QS_Julia::~QS_Julia()
 {
 }
 
-Quaternion QS_Julia::compute(const Quaternion &z)
+Quaternion QS_Julia::compute(const Quaternion &z) const
 {
 	return z * z + c;
 }

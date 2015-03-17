@@ -10,7 +10,7 @@ QuaternionSuite::~QuaternionSuite()
 {
 }
 	
-sf::Uint32 QuaternionSuite::ComputeIterationNumber(sf::Uint32 iterationsMax, double limit)
+sf::Uint32 QuaternionSuite::ComputeIterationNumber(sf::Uint32 iterationsMax, double limit) const
 {
 	sf::Uint32 iterations;
 	Quaternion z = z0;
@@ -19,5 +19,10 @@ sf::Uint32 QuaternionSuite::ComputeIterationNumber(sf::Uint32 iterationsMax, dou
 		z = compute(z);
 
 	return iterations;
+}
+
+sf::Uint32 QuaternionSuite::GetId(void) const
+{
+	return id;
 }
 

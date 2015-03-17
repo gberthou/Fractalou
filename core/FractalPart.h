@@ -2,29 +2,38 @@
 #define FRACTALPART_H
 
 #include <vector>
+#include <map>
 
 #include <SFML/System.hpp>
 
 #include "QuaternionSuite.h"
 
+typedef std::vector<QuaternionSuite *> SuiteCollection;
+typedef std::map<sf::Uint32, sf::Uint32> ResultCollection;
+typedef std::pair<sf::Uint32, sf::Uint32> ResultPair;
+
 class FractalPart
 {
 	public:
 		FractalPart();
-		FractalPart(const std::vector<QuaternionSuite *> &suites);
+		FractalPart(const SuiteCollection &suites);
 		virtual ~FractalPart();
 
 		// AddSuite: adds the given suite to the suite collection
 		void AddSuite(QuaternionSuite *suite);
 
-		void SetResults(const std::vector<sf::Uint32> &r);
+		// SetResults: Used by the master
+		void SetResults(const ResultCollection &r);
+
+		// ComputeResults: Used by the slave
+		void ComputeResults(void);
 
 		// BuildResult: adds all the results to the given collection
-		void BuildResult(std::vector<sf::Uint32> &result) const;
+		void BuildResult(ResultCollection &result) const;
 
 	private:
-		std::vector<QuaternionSuite *> suites;
-		std::vector<sf::Uint32> results;
+		SuiteCollection suites;
+		ResultCollection results;
 };
 
 #endif

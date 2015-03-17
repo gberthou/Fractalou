@@ -1,8 +1,40 @@
 #include <iostream>
+#include <vector>
+
+#include "Fractal.h"
+#include "fractals/QS_Julia.h"
+
+void testJuliaLocal(void)
+{
+	const unsigned int W = 80;
+	const unsigned int H = 42;
+
+	const Quaternion C(-0.835, -0.232, 0, 0);
+	
+	sf::Uint32 id = 0;
+	SuiteCollection suites;
+	ResultCollection result;
+	Fractal fractal;
+
+	for(unsigned int x = 0; x < W; ++x)
+	{
+		for(unsigned int y = 0; y < H; ++y)
+		{
+			Quaternion z0(x, y, 0, 0);
+			suites.push_back(new QS_Julia(id++, z0, C));
+		}
+	}
+
+	fractal.CreatePart(suites);
+	fractal.ComputeResults();
+	fractal.BuildResult(result);
+	std::cout << result.size() << " results" << std::endl;
+}
 
 int main(void)
 {
 	std::cout << "Fractals. Here." << std::endl;
+	testJuliaLocal();
 	return 0;
 }
 

@@ -10,7 +10,7 @@ class QS_Julia : public QuaternionSuite
 		virtual ~QS_Julia();
 
 	protected:
-		virtual Quaternion compute(const Quaternion &z);
+		virtual Quaternion compute(const Quaternion &z) const;
 		
 		Quaternion c;
 };

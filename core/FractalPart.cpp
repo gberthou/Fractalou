@@ -4,7 +4,7 @@ FractalPart::FractalPart()
 {
 }
 
-FractalPart::FractalPart(const std::vector<QuaternionSuite *> &asuites):
+FractalPart::FractalPart(const SuiteCollection &asuites):
 	suites(asuites)
 {
 }
@@ -18,13 +18,26 @@ void FractalPart::AddSuite(QuaternionSuite *suite)
 	suites.push_back(suite);
 }
 
-void FractalPart::SetResults(const std::vector<sf::Uint32> &r)
+void FractalPart::SetResults(const ResultCollection &r)
 {
 	results = r;
 }
 
-void FractalPart::BuildResult(std::vector<sf::Uint32> &result) const
+void FractalPart::ComputeResults(void)
 {
-	result.insert(result.begin(), results.begin(), results.end());
+	SuiteCollection::const_iterator it;
+	results.clear();
+	for(it = suites.begin(); it != suites.end(); ++it)
+	{
+		sf::Uint32 r = (*it)->ComputeIterationNumber(100, 0.001);
+		results.insert(ResultPair((*it)->GetId(), r));
+	}
+}
+
+void FractalPart::BuildResult(ResultCollection &result) const
+{
+	ResultCollection::const_iterator it;
+	for(it = results.begin(); it != results.end(); ++it)
+		result.insert(*it);
 }
 
