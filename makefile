@@ -15,9 +15,20 @@ GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
 INCLUDE=-I"./"
 
-MAINFILE=main.cpp Quaternion.cpp QuaternionSuite.cpp
+COREDIR=core/
+COREFILES=Quaternion.cpp QuaternionSuite.cpp
 
-CPPFILES=$(MAINFILE) 
+VIEWDIR=view/
+VIEWFILES=
+
+NETWORKDIR=network/
+NETWORKFILES=
+
+MAINFILE=main.cpp
+
+CPPFILES=$(MAINFILE) $(addprefix $(COREDIR),$(COREFILES)) $(addprefix $(VIEWDIR),$(VIEWFILES)) $(addprefix $(NETWORKDIR),$(NETWORKFILES))
+
+
 
 OBJ=$(CPPFILES:.cpp=.o)
 OBJABS=$(addprefix $(OBJDIR)/,$(OBJ))
