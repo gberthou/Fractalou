@@ -1,7 +1,7 @@
 #ifndef FRACTALPART_H
 #define FRACTALPART_H
 
-#include <map>
+#include <vector>
 
 #include <SFML/System.hpp>
 
@@ -11,10 +11,13 @@ class FractalPart
 {
 	public:
 		FractalPart();
+		FractalPart(const std::vector<QuaternionSuite *> &suites);
 		virtual ~FractalPart();
 
+		void AddSuite(QuaternionSuite *suite);
+
 	private:
-		std::map<sf::Uint32, QuaternionSuite *> suites;
+		std::vector<QuaternionSuite *> suites;
 };
 
 #endif

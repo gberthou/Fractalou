@@ -16,7 +16,7 @@ CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
 INCLUDE=-I"./"
 
 COREDIR=core/
-COREFILES=Quaternion.cpp QuaternionSuite.cpp
+COREFILES=Quaternion.cpp QuaternionSuite.cpp FractalPart.cpp Fractal.cpp
 
 VIEWDIR=view/
 VIEWFILES=
