@@ -9,6 +9,8 @@
 
 #include "network/MasterSocket.h"
 
+//#define WINDOW
+
 void testJuliaLocal(void)
 {
 	const unsigned int W = 80;
