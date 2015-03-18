@@ -22,10 +22,10 @@ FRACTALSDIR=core/fractals/
 FRACTALSFILES=QS_Julia.cpp
 
 VIEWDIR=view/
-VIEWFILES=
+VIEWFILES=FractalView.cpp FractalViewConsole.cpp
 
 NETWORKDIR=network/
-NETWORKFILES=
+NETWORKFILES=MasterSocket.cpp
 
 MAINFILE=main.cpp
 
@@ -43,7 +43,7 @@ BINRELEASE=$(addprefix $(RELEASEDIR)/,$(BIN))
 FLAGSDEBUG=-g -pg
 FLAGSRELEASE=-O2
 
-LIBS=-lsfml-system -lsfml-window -lsfml-graphics
+LIBS=-lsfml-system -lsfml-window -lsfml-graphics -lsfml-network
 
 $(DEBUG): $(OBJDEBUG)
 	$(GPP) $(LIBS) -o $(BINDEBUG) $(OBJDEBUG)

@@ -10,12 +10,21 @@ Fractal::~Fractal()
 		delete parts[i];
 }
 
-void Fractal::CreatePart(const std::vector<QuaternionSuite *> &suites)
+void Fractal::CreatePart(const SuiteCollection &suites)
 {
 	parts.push_back(new FractalPart(suites));
 }
 
-void Fractal::BuildResult(std::vector<sf::Uint32> &result) const
+void Fractal::ComputeResults(void)
+{
+	FractalPartCollection::iterator it;
+	for(it = parts.begin(); it != parts.end(); ++it)
+	{
+		(*it)->ComputeResults();
+	}
+}
+
+void Fractal::BuildResult(ResultCollection &result) const
 {
 	FractalPartCollection::const_iterator it;
 	
