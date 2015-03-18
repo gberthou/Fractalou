@@ -44,7 +44,11 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
     const unsigned int W = WINDOW_W;
 	const unsigned int H = 720;
 
-	const Quaternion C(-0.835, 0.232, 0, 0);
+	//const Quaternion C(-0.835, 0.232, 0, 0);
+	const Quaternion C(-0.756, 0.232, 0, 0); // fractus
+	//const Quaternion C(-0.756, 0.356, 0, 0); // rose
+	//const Quaternion C(0.42, 0.42, 0, 0); // stars
+	//const Quaternion C(0.005, 0.852, 0, 0); // lightning
 
 	sf::Uint32 id = 0;
 	SuiteCollection suites;

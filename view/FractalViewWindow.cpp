@@ -62,6 +62,7 @@ void FractalViewWindow::Perform(void)
     //std::cout << "max : "<< max << std::endl;
 
 	texture.update(pixels);
+	texture.setSmooth(true);
 	delete[] pixels;
 	sprite.setTexture(texture);
 }
