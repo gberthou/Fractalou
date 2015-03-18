@@ -1,7 +1,7 @@
 #ifndef QS_JULIA_H
 #define QS_JULIA_H
 
-#include "QuaternionSuite.h"
+#include "../QuaternionSuite.h"
 
 class QS_Julia : public QuaternionSuite
 {
@@ -11,7 +11,7 @@ class QS_Julia : public QuaternionSuite
 
 	protected:
 		virtual Quaternion compute(const Quaternion &z) const;
-		
+
 		Quaternion c;
 };
 

@@ -1,11 +1,17 @@
 #include <iostream>
 #include <vector>
 
+#include <SFML/Graphics.hpp>
+
 #include "Fractal.h"
 #include "fractals/QS_Julia.h"
 #include "FractalViewConsole.h"
 
+<<<<<<< HEAD
 #include "network/MasterSocket.h"
+=======
+//#define WINDOW
+>>>>>>> fc2236186475af36a40be507b277c7204976b7e9
 
 void testJuliaLocal(void)
 {
@@ -13,7 +19,7 @@ void testJuliaLocal(void)
 	const unsigned int H = 42;
 
 	const Quaternion C(-0.835, -0.232, 0, 0);
-	
+
 	sf::Uint32 id = 0;
 	SuiteCollection suites;
 	Fractal fractal;
@@ -35,10 +41,58 @@ void testJuliaLocal(void)
 
 int main(void)
 {
+
+    #ifndef  WINDOW
+
 	std::cout << "Fractals. Here." << std::endl;
-	//testJuliaLocal();
+	
+	testJuliaLocal();
 	MasterSocket ms(54000);
 	ms.AuthentificationRoutine();
+
+	#else
+
+    std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+
+	sf::RenderWindow window(modes[0], "Fractalou", sf::Style::Fullscreen);
+	window.setVerticalSyncEnabled(true);
+    //sf::CircleShape shape(100.f);
+    //shape.setFillColor(sf::Color::Green);
+
+    while (window.isOpen())
+    {
+
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch( event.type )
+            {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+            {
+                window.clear();
+                sf::CircleShape shape(10);
+                shape.setPosition( event.mouseMove.x, event.mouseMove.y );
+                shape.setFillColor(sf::Color::Green);
+                window.draw(shape);
+                break;
+            }
+            default:
+                break;
+            }
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        //window.draw(shape);
+        window.display();
+    }
+
+    #endif
+
 	return 0;
 }
 
