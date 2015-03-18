@@ -22,7 +22,7 @@ FRACTALSDIR=core/fractals/
 FRACTALSFILES=QS_Julia.cpp
 
 VIEWDIR=view/
-VIEWFILES=
+VIEWFILES=FractalView.cpp FractalViewConsole.cpp
 
 NETWORKDIR=network/
 NETWORKFILES=

@@ -7,7 +7,5 @@ FractalView::FractalView(Fractal *afractal):
 
 FractalView::~FractalView()
 {
-	if(fractal != 0)
-		delete fractal;
 }
 

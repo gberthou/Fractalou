@@ -9,6 +9,8 @@ class FractalView
 		FractalView(Fractal *fractal);
 		virtual ~FractalView();
 
+		virtual void Display(void) const = 0;
+
 	protected:
 		Fractal *fractal;
 };

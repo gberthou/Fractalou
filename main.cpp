@@ -3,6 +3,7 @@
 
 #include "Fractal.h"
 #include "fractals/QS_Julia.h"
+#include "FractalViewConsole.h"
 
 void testJuliaLocal(void)
 {
@@ -13,8 +14,8 @@ void testJuliaLocal(void)
 	
 	sf::Uint32 id = 0;
 	SuiteCollection suites;
-	ResultCollection result;
 	Fractal fractal;
+	FractalViewConsole view(&fractal, W, H);
 
 	for(unsigned int x = 0; x < W; ++x)
 	{
@@ -27,8 +28,7 @@ void testJuliaLocal(void)
 
 	fractal.CreatePart(suites);
 	fractal.ComputeResults();
-	fractal.BuildResult(result);
-	std::cout << result.size() << " results" << std::endl;
+	view.Display();
 }
 
 int main(void)
