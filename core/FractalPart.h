@@ -9,8 +9,8 @@
 #include "QuaternionSuite.h"
 
 typedef std::vector<QuaternionSuite *> SuiteCollection;
-typedef std::map<sf::Uint32, sf::Uint32> ResultCollection;
-typedef std::pair<sf::Uint32, sf::Uint32> ResultPair;
+typedef std::map<sf::Uint32, double> ResultCollection;
+typedef std::pair<sf::Uint32, double> ResultPair;
 
 class FractalPart
 {

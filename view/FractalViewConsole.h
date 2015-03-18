@@ -12,6 +12,9 @@ class FractalViewConsole : public FractalView
 		virtual void Display(void) const;
 
 	protected:
+		// Returns the "ascii-art" character corresponding to the given iteration ratio
+		static char GetCharacter(double ratio);
+
 		unsigned int width;
 		unsigned int height;
 };

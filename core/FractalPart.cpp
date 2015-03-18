@@ -29,8 +29,9 @@ void FractalPart::ComputeResults(void)
 	results.clear();
 	for(it = suites.begin(); it != suites.end(); ++it)
 	{
-		sf::Uint32 r = (*it)->ComputeIterationNumber(100, 0.001);
-		results.insert(ResultPair((*it)->GetId(), r));
+		sf::Uint32 r = (*it)->ComputeIterationNumber();
+		sf::Uint32 itMax = (*it)->GetIterationsMax();
+		results.insert(ResultPair((*it)->GetId(), (double)r/itMax));
 	}
 }
 

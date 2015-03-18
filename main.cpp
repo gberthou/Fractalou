@@ -21,8 +21,8 @@ void testJuliaLocal(void)
 	{
 		for(unsigned int y = 0; y < H; ++y)
 		{
-			Quaternion z0(x, y, 0, 0);
-			suites.push_back(new QS_Julia(id++, z0, C));
+			Quaternion z0((x-W/2.)/100., (y-H/2.)/100., 0, 0);
+			suites.push_back(new QS_Julia(id++, z0, C, 100., 100.));
 		}
 	}
 
