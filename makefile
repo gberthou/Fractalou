@@ -46,10 +46,10 @@ FLAGSRELEASE=-O2
 LIBS=-lsfml-system -lsfml-window -lsfml-graphics -lsfml-network
 
 $(DEBUG): $(OBJDEBUG)
-	$(GPP) $(LIBS) -o $(BINDEBUG) $(OBJDEBUG)
+	$(GPP) -o $(BINDEBUG) $(OBJDEBUG) $(LIBS)
 
 $(RELEASE): $(OBJRELEASE)
-	$(GPP) $(LIBS) -o $(BINRELEASE) $(OBJRELEASE)
+	$(GPP) -o $(BINRELEASE) $(OBJRELEASE) $(LIBS)
 
 $(CLEAN):
 	rm -f $(BINDEBUG) $(BINRELEASE) $(OBJDEBUG) $(OBJRELEASE)
@@ -59,4 +59,3 @@ $(DEBUGDIR)/$(OBJDIR)/%.o: %.cpp
 
 $(RELEASEDIR)/$(OBJDIR)/%.o: %.cpp
 	$(GPP) $(CFLAGS) $(FLAGSRELEASE) $(INCLUDE) -c -o $@ $<
-

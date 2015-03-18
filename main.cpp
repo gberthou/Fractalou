@@ -7,6 +7,7 @@
 #include "QS_Julia.h"
 #include "FractalViewConsole.h"
 #include "FractalViewWindow.h"
+#include "network/MasterSocket.h"
 
 #define WINDOW
 #define WINDOW_W 1280
@@ -24,12 +25,12 @@ void testJuliaLocal(void)
 	Fractal fractal;
 	FractalViewConsole view(&fractal, W, H);
 
-	for(unsigned int x = 0; x < W; ++x) // C'est pas inversé ?
+	for(unsigned int y = 0; y < H; ++y)
 	{
-		for(unsigned int y = 0; y < H; ++y)
+		for(unsigned int x = 0; x < W; ++x)
 		{
-			Quaternion z0((x-W/2.)/100., (y-H/2.)/100., 0, 0);
-			suites.push_back(new QS_Julia(id++, z0, C, 100., 100.));
+			Quaternion z0((x-W/2.)/20., (y-H/2.)/20., 0, 0);
+			suites.push_back(new QS_Julia(id++, z0, C, 50., 100.));
 		}
 	}
 
@@ -73,7 +74,10 @@ int main(void)
     #ifndef  WINDOW
 
 	std::cout << "Fractals. Here." << std::endl;
+
 	testJuliaLocal();
+	MasterSocket ms(54000);
+	ms.AuthentificationRoutine();
 
 	#else
 

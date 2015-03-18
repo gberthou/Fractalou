@@ -1,9 +1,13 @@
 #include "MasterSocket.h"
 
+#include <SFML/System.hpp>
+#include <iostream>
+
 MasterSocket::MasterSocket(const int& port)
 {
 	if(listener.listen(port) != sf::Socket::Done)
 	{
+		std::cerr << "Failed to initialize master socket." << std::endl;
 		std::exit(1);
 	}
 }
@@ -21,14 +25,39 @@ void MasterSocket::AuthentificationRoutine(void)
 		sf::TcpSocket* client = new sf::TcpSocket;
 		if (listener.accept(*client) != sf::Socket::Done)
 		{
+			std::cerr << "Failed when accepting connection." << std::endl;
 			exit(1);
 		} else {
 			clients.push_back(client);
+			sf::Thread thread(&MasterSocket::ClientRoutine, client);
+			thread.launch();
 		}
 	}
 }
 
-void MasterSocket::ClientRoutine()
+void MasterSocket::ClientRoutine(sf::TcpSocket* client)
 {
-	
+	char data[MasterSocket::BUFFER_SIZE];
+	std::size_t received;
+
+	while(1)
+	{
+		if(client->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
+		{
+			std::cerr << "Connection lost." << std::endl;
+			return;
+		} 
+		else 
+		{
+			std::cout << data << std::endl;
+			if(client->send(data, 100) != sf::Socket::Done)
+			{
+				std::cerr << "Error while trying to send data to client." << std::endl;
+			}
+			else
+			{
+				std::cout << "Data sent to client." << std::endl;
+			}
+		}
+	}
 }
