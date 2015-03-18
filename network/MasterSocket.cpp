@@ -29,23 +29,35 @@ void MasterSocket::AuthentificationRoutine(void)
 			exit(1);
 		} else {
 			clients.push_back(client);
-			sf::Thread thread(&MasterSocket::ClientRoutine, this);
+			sf::Thread thread(&MasterSocket::ClientRoutine, client);
 			thread.launch();
 		}
 	}
 }
 
-void MasterSocket::ClientRoutine()
+void MasterSocket::ClientRoutine(sf::TcpSocket* client)
 {
 	char data[MasterSocket::BUFFER_SIZE];
 	std::size_t received;
 
-	// TCP socket:
-	if (clients[0]->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
+	while(1)
 	{
-		std::cerr << "Failed when receiving data from client." << std::endl;
-		exit(1);
-	} else {
-		std::cout << data << std::endl;
+		if(client->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
+		{
+			std::cerr << "Connection lost." << std::endl;
+			return;
+		} 
+		else 
+		{
+			std::cout << data << std::endl;
+			if(client->send(data, 100) != sf::Socket::Done)
+			{
+				std::cerr << "Error while trying to send data to client." << std::endl;
+			}
+			else
+			{
+				std::cout << "Data sent to client." << std::endl;
+			}
+		}
 	}
 }

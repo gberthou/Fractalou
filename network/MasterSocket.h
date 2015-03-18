@@ -10,12 +10,13 @@ class MasterSocket
 		~MasterSocket();
 
 		void AuthentificationRoutine(void);
-		void ClientRoutine();
 
 	protected:
 		sf::TcpListener listener;
 		static const size_t BUFFER_SIZE = 100; // FIXME
 		std::vector<sf::TcpSocket*> clients;
+
+		static void ClientRoutine(sf::TcpSocket*); 
 };
 
 #endif
