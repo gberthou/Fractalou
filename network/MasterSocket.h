@@ -8,7 +8,7 @@ class MasterSocket
 	public:
 		MasterSocket(const int&);
 		~MasterSocket();
-		
+
 		void AuthentificationRoutine(void);
 		void ClientRoutine();
 

@@ -5,6 +5,8 @@
 #include "fractals/QS_Julia.h"
 #include "FractalViewConsole.h"
 
+#include "network/MasterSocket.h"
+
 void testJuliaLocal(void)
 {
 	const unsigned int W = 80;
@@ -34,7 +36,9 @@ void testJuliaLocal(void)
 int main(void)
 {
 	std::cout << "Fractals. Here." << std::endl;
-	testJuliaLocal();
+	//testJuliaLocal();
+	MasterSocket ms(54000);
+	ms.AuthentificationRoutine();
 	return 0;
 }
 
