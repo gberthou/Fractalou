@@ -4,10 +4,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "Fractal.h"
-#include "fractals/QS_Julia.h"
+#include "QS_Julia.h"
 #include "FractalViewConsole.h"
+#include "FractalViewWindow.h"
 
-//#define WINDOW
+#define WINDOW
+#define WINDOW_W 1280
+#define WINDOW_H 720
 
 void testJuliaLocal(void)
 {
@@ -21,7 +24,7 @@ void testJuliaLocal(void)
 	Fractal fractal;
 	FractalViewConsole view(&fractal, W, H);
 
-	for(unsigned int x = 0; x < W; ++x)
+	for(unsigned int x = 0; x < W; ++x) // C'est pas inversé ?
 	{
 		for(unsigned int y = 0; y < H; ++y)
 		{
@@ -35,6 +38,35 @@ void testJuliaLocal(void)
 	view.Display();
 }
 
+FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
+{
+    const unsigned int W = WINDOW_W;
+	const unsigned int H = 720;
+
+	const Quaternion C(-0.835, 0.232, 0, 0);
+
+	sf::Uint32 id = 0;
+	SuiteCollection suites;
+	Fractal fractal;
+	FractalViewWindow* view = new FractalViewWindow(&fractal, window, W, H);
+
+    for(unsigned int y = 0; y < H; ++y)
+	{
+        for(unsigned int x = 0; x < W; ++x)
+		{
+			//Quaternion z0((x-W/2.)/300., (y-H/2.)/300., 0, 0);
+			Quaternion z0((x-W/2.-0.835)/zoom,(y-H/2.+0.232)/zoom, 0, 0);
+			//Quaternion z0((x-W/2.)/(100.*zoom), (y+H/2.)/(100.*zoom), 0, 0);
+			suites.push_back(new QS_Julia(id++, z0, C, 100., 100.));
+		}
+	}
+
+	fractal.CreatePart(suites);
+	fractal.ComputeResults();
+	view->Perform();
+	return view;
+}
+
 int main(void)
 {
 
@@ -45,43 +77,63 @@ int main(void)
 
 	#else
 
-    std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
 
-	sf::RenderWindow window(modes[0], "Fractalou", sf::Style::Fullscreen);
+
+    //std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+	//sf::RenderWindow window(modes[0], "Fractalou", sf::Style::Fullscreen);
+
+	sf::RenderWindow window(sf::VideoMode(WINDOW_W,WINDOW_H), "Fractalou", sf::Style::Default);
+
 	window.setVerticalSyncEnabled(true);
-    //sf::CircleShape shape(100.f);
-    //shape.setFillColor(sf::Color::Green);
+	window.setFramerateLimit(60);
+
+	double zoom = 500;
+
+    FractalViewWindow* view = testJuliaLocalWindowed(&window, zoom);
+    sf::Sprite* fract = view->getSprite();
+
+    window.draw(*fract);
+    window.display();
+
 
     while (window.isOpen())
     {
-
 
         sf::Event event;
         while (window.pollEvent(event))
         {
             switch( event.type )
             {
+            case sf::Event::KeyPressed:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    window.close();
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
+                           || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+                {
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))zoom*=2.;
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))zoom/=2.;
+
+                    delete view;
+                    delete fract;
+
+                    view = testJuliaLocalWindowed(&window, zoom);
+                    fract = view->getSprite();
+
+                    window.clear();
+                    window.draw(*fract);
+                    window.display();
+                }
+                break;
             case sf::Event::Closed:
                 window.close();
                 break;
-            case sf::Event::MouseMoved:
-            {
-                window.clear();
-                sf::CircleShape shape(10);
-                shape.setPosition( event.mouseMove.x, event.mouseMove.y );
-                shape.setFillColor(sf::Color::Green);
-                window.draw(shape);
-                break;
-            }
             default:
                 break;
             }
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-        //window.draw(shape);
-        window.display();
     }
 
     #endif
