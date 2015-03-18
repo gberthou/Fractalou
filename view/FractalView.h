@@ -1,7 +1,7 @@
 #ifndef FRACTALVIEW_H
 #define FRACTALVIEW_H
 
-#include "Fractal.h"
+#include "../core/Fractal.h"
 
 class FractalView
 {
