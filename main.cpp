@@ -7,11 +7,7 @@
 #include "fractals/QS_Julia.h"
 #include "FractalViewConsole.h"
 
-<<<<<<< HEAD
 #include "network/MasterSocket.h"
-=======
-//#define WINDOW
->>>>>>> fc2236186475af36a40be507b277c7204976b7e9
 
 void testJuliaLocal(void)
 {
