@@ -43,32 +43,18 @@ void FractalViewWindow::BuildImage(void)
 
 	std::cout << "There are " << result.size() << " results." << std::endl;
 
-    //double min = 5000,max = 0;
-
-	for(unsigned int y = 0; y < height; ++y)
+	for(it = result.begin(); it != result.end(); ++it)
 	{
-        //std::cout << y+1 << "/" << height << std::endl;
-		for(unsigned int x = 0; x < width; ++x)
-		{
-			sf::Uint32 id = y * width + x;
-			it = result.find(id);
-			if(it != result.end())
-			{
-			    double a = it->second;
-				pixels[4*id  ] = 255*(sin(18*a-3.14159/2)+1)/2.;
-				pixels[4*id+1] = 255*(sin(12*a-3.14159/2)+1)/2.;
-				pixels[4*id+2] = 255*(sin(10*a-3.14159/2)+1)/2.;
-				pixels[4*id+3] = 255;
-				//if(it->second < min) min = it->second;
-				//if(it->second > max) max = it->second;
-			}
-			else
-				std::cout << "X";
-		}
+		sf::Uint32 id = it->first;
+		double a = it->second;
+		
+		pixels[4*id  ] = 255*(sin(18*a-3.14159/2)+1)/2.;
+		pixels[4*id+1] = 255*(sin(12*a-3.14159/2)+1)/2.;
+		pixels[4*id+2] = 255*(sin(10*a-3.14159/2)+1)/2.;
+		pixels[4*id+3] = 255;
 	}
-    std::cout << "fin" << std::endl;
-    //std::cout << "min : "<< min << std::endl;
-    //std::cout << "max : "<< max << std::endl;
+
+    std::cout << "done" << std::endl;
 
 	texture.update(pixels);
 	delete[] pixels;

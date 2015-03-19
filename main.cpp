@@ -56,6 +56,7 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 	FractalViewWindow* view = new FractalViewWindow(&fractal, window, W, H);
 	if(!view->Initialize()) // Unable to create the texture
 	{
+		return 0;
 	}
 
     for(unsigned int y = 0; y < H; ++y)
@@ -70,8 +71,15 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 	}
 
 	fractal.CreatePart(suites);
+
+	std::cout << "Computation begins..." << std::endl;
 	fractal.ComputeResults();
+	std::cout << "Computation ends!" << std::endl;
+
+	std::cout << "Building image..." << std::endl;
 	view->BuildImage();
+	std::cout << "Image built!" << std::endl;
+
 	return view;
 }
 
@@ -93,12 +101,14 @@ int main(void)
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_W,WINDOW_H), "Fractalou", sf::Style::Default);
 
+	double zoom = 500;
+	FractalViewWindow* view = 0;
+
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
-	double zoom = 500;
 
-    FractalViewWindow* view = testJuliaLocalWindowed(&window, zoom);
+    view = testJuliaLocalWindowed(&window, zoom);
 
 	view->Display();
 
@@ -106,42 +116,39 @@ int main(void)
 
     while (window.isOpen())
     {
-
         sf::Event event;
         while (window.pollEvent(event))
         {
             switch( event.type )
             {
-            case sf::Event::KeyPressed:
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                {
-                    window.close();
-                }
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
-                           || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-                {
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
-						zoom*=2.;
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-						zoom/=2.;
+				case sf::Event::KeyPressed:
+					if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+					{
+						window.close();
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+					{
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+							zoom*=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+							zoom/=2.;
 
-                    delete view;
+						delete view;
 
-                    view = testJuliaLocalWindowed(&window, zoom);
+						view = testJuliaLocalWindowed(&window, zoom);
 
-                    window.clear();
-					view->Display();
-					window.display();
-                }
-                break;
-            case sf::Event::Closed:
-                window.close();
-                break;
-            default:
-                break;
+						window.clear();
+						view->Display();
+						window.display();
+					}
+					break;
+				case sf::Event::Closed:
+					window.close();
+					break;
+				default:
+					break;
             }
-            if (event.type == sf::Event::Closed)
-                window.close();
         }
     }
 

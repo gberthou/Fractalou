@@ -38,7 +38,6 @@ void FractalPart::ComputeResults(void)
 void FractalPart::BuildResult(ResultCollection &result) const
 {
 	ResultCollection::const_iterator it;
-	for(it = results.begin(); it != results.end(); ++it)
-		result.insert(*it);
+	result.insert(results.begin(), results.end());
 }
 
