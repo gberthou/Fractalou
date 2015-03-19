@@ -12,10 +12,10 @@ class FractalViewWindow : public FractalView
 
         virtual void Display(void) const;
         
-		bool Initialize(void);
-		void BuildImage(void);
+        bool Initialize(void);
+        void BuildImage(void);
    
-   	protected:
+    protected:
         sf::RenderWindow* window;
         unsigned int width;
         unsigned int height;

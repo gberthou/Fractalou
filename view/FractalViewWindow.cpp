@@ -2,6 +2,8 @@
 #include <math.h>
 #include <iostream>
 
+#include "Colors.h"
+
 FractalViewWindow::FractalViewWindow(Fractal *fractal, sf::RenderWindow *win, unsigned int w, unsigned int h):
 	FractalView(fractal),
 	window(win),
@@ -48,9 +50,7 @@ void FractalViewWindow::BuildImage(void)
 		sf::Uint32 id = it->first;
 		double a = it->second;
 		
-		pixels[4*id  ] = 255*(sin(18*a-3.14159/2)+1)/2.;
-		pixels[4*id+1] = 255*(sin(12*a-3.14159/2)+1)/2.;
-		pixels[4*id+2] = 255*(sin(10*a-3.14159/2)+1)/2.;
+		Colors::GetColor(a,&pixels[4*id],&pixels[4*id+1],&pixels[4*id+2]);
 		pixels[4*id+3] = 255;
 	}
 

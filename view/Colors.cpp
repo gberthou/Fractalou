@@ -1,9 +1,10 @@
 #include "Colors.h"
+#include <cmath>
 
 /* HSV to RGB conversion */
-void Colors::HsvToRgb(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char h, unsigned char s, unsigned char v)
+void Colors::HsvToRgb(sf::Uint8 *r, sf::Uint8 *g, sf::Uint8 *b, sf::Uint8 h, sf::Uint8 s, sf::Uint8 v)
 {
-    unsigned char region, fpart, p, q, t;
+    sf::Uint8 region, fpart, p, q, t;
     if(s == 0) { /* grayscale */
         *r = *g = *b = v;
         return;
@@ -44,3 +45,10 @@ Colors::~Colors()
 {
 }
 
+void Colors::GetColor(double nbIteration, sf::Uint8 *r, sf::Uint8 *g, sf::Uint8 *b)
+{
+    // example
+    *r = 255*(sin(18*nbIteration-3.14159/2)+1)/2.;
+	*g = 255*(sin(12*nbIteration-3.14159/2)+1)/2.;
+	*b = 255*(sin(10*nbIteration-3.14159/2)+1)/2.;
+}
