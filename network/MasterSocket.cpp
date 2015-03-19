@@ -3,7 +3,7 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-MasterSocket::MasterSocket(const int& port)
+MasterSocket::MasterSocket(const unsigned short& port)
 {
 	if(listener.listen(port) != sf::Socket::Done)
 	{
