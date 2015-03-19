@@ -6,7 +6,7 @@
 class FractalViewConsole : public FractalView
 {
 	public:
-		FractalViewConsole(Fractal *fractal, unsigned int width, unsigned int height);
+		FractalViewConsole(const Fractal *fractal, unsigned int width, unsigned int height);
 		virtual ~FractalViewConsole();
 
 		virtual void Display(void) const;

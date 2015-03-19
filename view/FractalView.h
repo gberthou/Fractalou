@@ -6,13 +6,13 @@
 class FractalView
 {
 	public:
-		FractalView(Fractal *fractal);
+		FractalView(const Fractal *fractal);
 		virtual ~FractalView();
 
 		virtual void Display(void) const = 0;
 
 	protected:
-		Fractal *fractal;
+		const Fractal *fractal;
 };
 
 #endif

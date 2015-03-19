@@ -2,7 +2,7 @@
 
 #include "FractalViewConsole.h"
 
-FractalViewConsole::FractalViewConsole(Fractal *f, unsigned int w, unsigned int h):
+FractalViewConsole::FractalViewConsole(const Fractal *f, unsigned int w, unsigned int h):
 	FractalView(f),
 	width(w),
 	height(h)

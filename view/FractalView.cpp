@@ -1,6 +1,6 @@
 #include "FractalView.h"
 
-FractalView::FractalView(Fractal *afractal):
+FractalView::FractalView(const Fractal *afractal):
 	fractal(afractal)
 {
 }

@@ -15,6 +15,8 @@ GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
 INCLUDE=-I"./" -I"./core" -I"./view" -I"./network" -I"./core/fractals"
 
+BASEFILES=Options.cpp Application.cpp ApplicationMaster.cpp ApplicationSlave.cpp
+
 COREDIR=core/
 COREFILES=Quaternion.cpp QuaternionSuite.cpp FractalPart.cpp Fractal.cpp
 
@@ -29,7 +31,7 @@ NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp
 
 MAINFILE=main.cpp
 
-CPPFILES=$(MAINFILE) $(addprefix $(COREDIR),$(COREFILES)) $(addprefix $(FRACTALSDIR),$(FRACTALSFILES)) $(addprefix $(VIEWDIR),$(VIEWFILES)) $(addprefix $(NETWORKDIR),$(NETWORKFILES))
+CPPFILES=$(MAINFILE) $(BASEFILES) $(addprefix $(COREDIR),$(COREFILES)) $(addprefix $(FRACTALSDIR),$(FRACTALSFILES)) $(addprefix $(VIEWDIR),$(VIEWFILES)) $(addprefix $(NETWORKDIR),$(NETWORKFILES))
 
 OBJ=$(CPPFILES:.cpp=.o)
 OBJABS=$(addprefix $(OBJDIR)/,$(OBJ))

@@ -7,7 +7,7 @@
 class FractalViewWindow : public FractalView
 {
     public:
-        FractalViewWindow(Fractal* fractal, sf::RenderWindow* window, unsigned int width = 800, unsigned int height = 600 );
+        FractalViewWindow(const Fractal* fractal, sf::RenderWindow* window, unsigned int width = 800, unsigned int height = 600 );
         virtual ~FractalViewWindow();
 
         virtual void Display(void) const;

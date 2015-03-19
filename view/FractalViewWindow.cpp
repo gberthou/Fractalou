@@ -2,8 +2,8 @@
 #include <math.h>
 #include <iostream>
 
-FractalViewWindow::FractalViewWindow(Fractal *fractal, sf::RenderWindow *win, unsigned int w, unsigned int h):
-	FractalView(fractal),
+FractalViewWindow::FractalViewWindow(const Fractal *f, sf::RenderWindow *win, unsigned int w, unsigned int h):
+	FractalView(f),
 	window(win),
 	width(w),
 	height(h)
