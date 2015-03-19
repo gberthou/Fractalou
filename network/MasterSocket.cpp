@@ -50,7 +50,7 @@ void MasterSocket::ClientRoutine(sf::TcpSocket* client)
 		else 
 		{
 			std::cout << data << std::endl;
-			if(client->send(data, 100) != sf::Socket::Done)
+			if(client->send(data, BUFFER_SIZE) != sf::Socket::Done)
 			{
 				std::cerr << "Error while trying to send data to client." << std::endl;
 			}

@@ -7,7 +7,8 @@
 #include "QS_Julia.h"
 #include "FractalViewConsole.h"
 #include "FractalViewWindow.h"
-#include "network/MasterSocket.h"
+#include "MasterSocket.h"
+#include "SlaveSocket.h"
 
 #define WINDOW
 #define WINDOW_W 1280
@@ -93,6 +94,10 @@ int main(void)
 	testJuliaLocal();
 	MasterSocket ms(54000);
 	ms.AuthentificationRoutine();
+
+    //*******For testing purpose*********
+    //SlaveSocket ss("localhost", 54000);
+    //ss.Run();
 
 	#else
 
