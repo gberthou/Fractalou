@@ -2,8 +2,11 @@
 #include <math.h>
 #include <iostream>
 
-FractalViewWindow::FractalViewWindow(Fractal *fractal, sf::RenderWindow*, unsigned int w, unsigned int h)
-    : FractalView(fractal), width(w), height(h)
+FractalViewWindow::FractalViewWindow(Fractal *fractal, sf::RenderWindow *win, unsigned int w, unsigned int h):
+	FractalView(fractal),
+	window(win),
+	width(w),
+	height(h)
 {
     //ctor
 }
@@ -15,25 +18,30 @@ FractalViewWindow::~FractalViewWindow()
 
 void FractalViewWindow::Display(void) const
 {
-
-        //window->draw(sprite);
+	window->draw(sprite);
 }
 
-void FractalViewWindow::Perform(void)
+bool FractalViewWindow::Initialize(void)
+{
+	bool res = texture.create(width, height);
+	if(res)
+	{
+		texture.setSmooth(true);
+		sprite.setTexture(texture);
+	}
+	return res;
+}
+
+void FractalViewWindow::BuildImage(void)
 {
     ResultCollection result;
 	ResultCollection::const_iterator it;
+    
+	sf::Uint8* pixels = new sf::Uint8[width * height * 4];
 
 	fractal->BuildResult(result);
 
 	std::cout << "There are " << result.size() << " results." << std::endl;
-
-	if (!texture.create(width, height))
-    {
-        return;
-    }
-
-    sf::Uint8* pixels = new sf::Uint8[width * height * 4];
 
     //double min = 5000,max = 0;
 
@@ -63,12 +71,6 @@ void FractalViewWindow::Perform(void)
     //std::cout << "max : "<< max << std::endl;
 
 	texture.update(pixels);
-	texture.setSmooth(true);
 	delete[] pixels;
-	sprite.setTexture(texture);
 }
 
-sf::Sprite* FractalViewWindow::getSprite()
-{
-    return &sprite;
-}

@@ -11,15 +11,16 @@ class FractalViewWindow : public FractalView
         virtual ~FractalViewWindow();
 
         virtual void Display(void) const;
-        void Perform(void);
-        sf::Sprite* getSprite();
-    protected:
+        
+		bool Initialize(void);
+		void BuildImage(void);
+   
+   	protected:
+        sf::RenderWindow* window;
         unsigned int width;
         unsigned int height;
-        sf::RenderWindow* window;
         sf::Sprite sprite;
         sf::Texture texture;
-    private:
 };
 
 #endif // FRACTALVIEWWINDOW_H

@@ -54,6 +54,9 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 	SuiteCollection suites;
 	Fractal fractal;
 	FractalViewWindow* view = new FractalViewWindow(&fractal, window, W, H);
+	if(!view->Initialize()) // Unable to create the texture
+	{
+	}
 
     for(unsigned int y = 0; y < H; ++y)
 	{
@@ -68,7 +71,7 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 
 	fractal.CreatePart(suites);
 	fractal.ComputeResults();
-	view->Perform();
+	view->BuildImage();
 	return view;
 }
 
@@ -85,8 +88,6 @@ int main(void)
 
 	#else
 
-
-
     //std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
 	//sf::RenderWindow window(modes[0], "Fractalou", sf::Style::Fullscreen);
 
@@ -98,11 +99,10 @@ int main(void)
 	double zoom = 500;
 
     FractalViewWindow* view = testJuliaLocalWindowed(&window, zoom);
-    sf::Sprite* fract = view->getSprite();
 
-    window.draw(*fract);
-    window.display();
+	view->Display();
 
+	window.display();
 
     while (window.isOpen())
     {
@@ -116,21 +116,22 @@ int main(void)
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 {
                     window.close();
-                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
+                }
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
                            || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
                 {
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))zoom*=2.;
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))zoom/=2.;
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+						zoom*=2.;
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+						zoom/=2.;
 
                     delete view;
-                    delete fract;
 
                     view = testJuliaLocalWindowed(&window, zoom);
-                    fract = view->getSprite();
 
                     window.clear();
-                    window.draw(*fract);
-                    window.display();
+					view->Display();
+					window.display();
                 }
                 break;
             case sf::Event::Closed:
