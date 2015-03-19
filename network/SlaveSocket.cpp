@@ -23,7 +23,11 @@ void SlaveSocket::Run()
 	{
 		while(!AskJob());
 
-		//Do the job
+		std::cout << part.ToString() << std::endl;
+
+		part.ComputeResults();
+
+		std::cout << part.ToString() << std::endl;
 
 		while(!SendData());
 	}
@@ -38,11 +42,12 @@ bool SlaveSocket::AskJob()
 	}
 	std::cout << "Asking job..." << std::endl;
 
-	std::size_t received;
-	if (socket.receive(data, sizeof(data), received) != sf::Socket::Done)
+	sf::Packet packet;
+	if (socket.receive(packet) != sf::Socket::Done)
 	{
 		return false;
 	}
+	packet >> part;
 	std::cout << "Job received !" << std::endl;
 
 	return true;
@@ -50,7 +55,9 @@ bool SlaveSocket::AskJob()
 
 bool SlaveSocket::SendData()
 {
-	if (socket.send(data, sizeof(data)) != sf::Socket::Done)
+	sf::Packet packet;
+	packet << part;
+	if (socket.send(packet) != sf::Socket::Done)
 	{
 		return false;
 	}

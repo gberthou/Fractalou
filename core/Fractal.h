@@ -22,6 +22,8 @@ class Fractal
 		
 		void BuildResult(ResultCollection &result) const;
 
+		FractalPartCollection GetParts(void) const;
+
 	private:
 		FractalPartCollection parts;
 };

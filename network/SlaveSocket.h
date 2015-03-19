@@ -3,6 +3,8 @@
 
 #include <SFML/Network.hpp>
 
+#include "FractalPart.h"
+
 class SlaveSocket
 {
 	public:
@@ -14,6 +16,7 @@ class SlaveSocket
 		sf::TcpSocket socket;
 		static const size_t BUFFER_SIZE = 100; // FIXME
 		char data[BUFFER_SIZE];
+		FractalPart part;
 
 		bool AskJob();
 		bool SendData();

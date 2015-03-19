@@ -3,7 +3,8 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-MasterSocket::MasterSocket(const unsigned short& port)
+MasterSocket::MasterSocket(const unsigned short& port, const Fractal& f) :
+	fractal(f)
 {
 	if(listener.listen(port) != sf::Socket::Done)
 	{
@@ -29,34 +30,50 @@ void MasterSocket::AuthentificationRoutine(void)
 			exit(1);
 		} else {
 			clients.push_back(client);
-			sf::Thread thread(&MasterSocket::ClientRoutine, client);
+			ClientRoutineParams p = {client, fractal};
+			sf::Thread thread(&MasterSocket::ClientRoutine, p);
 			thread.launch();
+			return;
 		}
 	}
 }
 
-void MasterSocket::ClientRoutine(sf::TcpSocket* client)
+void MasterSocket::ClientRoutine(ClientRoutineParams params)
 {
 	char data[MasterSocket::BUFFER_SIZE];
 	std::size_t received;
 
 	while(1)
 	{
-		if(client->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
+		if(params.client->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
 		{
 			std::cerr << "Connection lost." << std::endl;
 			return;
 		} 
 		else 
 		{
+			sf::Packet packet;
+			packet << *(params.fractal.GetParts()[0]);
 			std::cout << data << std::endl;
-			if(client->send(data, BUFFER_SIZE) != sf::Socket::Done)
+			if(params.client->send(packet) != sf::Socket::Done)
 			{
 				std::cerr << "Error while trying to send data to client." << std::endl;
 			}
 			else
 			{
 				std::cout << "Data sent to client." << std::endl;
+				sf::Packet packetResult;
+				if(params.client->receive(packetResult) != sf::Socket::Done)
+				{
+					std::cerr << "Connection lost." << std::endl;
+				}
+				else 
+				{
+					packetResult >> *(params.fractal.GetParts()[0]);
+					std::cout << "Job finished." << std::endl;
+					std::cout << params.fractal.GetParts()[0]->ToString() << std::endl;
+					return;
+				}
 			}
 		}
 	}

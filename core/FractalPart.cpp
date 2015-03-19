@@ -48,31 +48,39 @@ void FractalPart::BuildResult(ResultCollection &result) const
 
 std::string FractalPart::ToString()
 {
-	return ttos(suites.size()) + " " + ttos(results.size()) + " " + ttos(suites[0]->GetId());
+	return ttos(suites.size()) + " " + ttos(results.size()) + " " ;
+}
+
+ResultCollection& FractalPart::GetResults()
+{
+	return results;
 }
 
 sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj)
 {
-	sf::Uint16 size = obj.suites.size();
+	sf::Uint32 size = obj.suites.size();
+	std::cout << "this is my sze: " << size << std::endl;
 	os << size;
-	SuiteCollection sc = SuiteCollection(obj.suites);
-	for(SuiteCollection::iterator it = sc.begin() ; it != sc.end(); ++it)
+	//SuiteCollection sc = SuiteCollection(obj.suites);
+	for(SuiteCollection::const_iterator it = obj.suites.begin() ; it != obj.suites.end(); ++it)
 		os << (**it);
 	size = obj.results.size();
 	os << size;
-	ResultCollection rc = ResultCollection(obj.results);
-	for(ResultCollection::iterator it = rc.begin() ; it != rc.end(); ++it)
+	//ResultCollection rc = ResultCollection(obj.results);
+	for(ResultCollection::const_iterator it = obj.results.begin() ; it != obj.results.end(); ++it)
 	 	os << it->first << it->second;
 	return os;
 }
 sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
 {
-	sf::Uint16 size;
+	sf::Uint32 size;
 	is >> size;
 	QS_Julia* qs;
 	sf::Uint32 ui;
 	double d;
-	for(sf::Uint16 i = 0; i < size; ++i)
+
+	std::cout << "Nb px: " << size << std::endl;
+	for(sf::Uint32 i = 0; i < size; ++i)
 	{
 		Quaternion q(0, 0, 0, 0);
 		Quaternion z0(0, 0, 0, 0);
@@ -81,7 +89,7 @@ sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
 		obj.suites.push_back(qs);
 	}
 	is >> size;
-	for(sf::Uint16 i = 0; i < size; ++i)
+	for(sf::Uint32 i = 0; i < size; ++i)
 	{
 		is >> ui >> d;
 		obj.results.insert(std::pair<sf::Uint32, double>(ui, d));

@@ -38,3 +38,8 @@ void Fractal::BuildResult(ResultCollection &result) const
 		(*it)->BuildResult(result);
 	}
 }
+
+FractalPartCollection Fractal::GetParts(void) const
+{
+	return parts;
+}
