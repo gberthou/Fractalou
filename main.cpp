@@ -47,6 +47,7 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 
 	//const Quaternion C(-0.835, 0.232, 0, 0);
 	const Quaternion C(-0.756, 0.232, 0, 0); // fractus
+	//const Quaternion C(-0.756, 0.156, 0, 0); // fractus pas beau
 	//const Quaternion C(-0.756, 0.356, 0, 0); // rose
 	//const Quaternion C(0.42, 0.42, 0, 0); // stars
 	//const Quaternion C(0.005, 0.852, 0, 0); // lightning
@@ -88,11 +89,11 @@ int main(void)
 {
 
     #ifndef  WINDOW
+	MasterSocket ms(54000);
 
 	std::cout << "Fractals. Here." << std::endl;
 
 	testJuliaLocal();
-	MasterSocket ms(54000);
 	ms.AuthentificationRoutine();
 
     //*******For testing purpose*********
@@ -112,11 +113,9 @@ int main(void)
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
-
     view = testJuliaLocalWindowed(&window, zoom);
 
 	view->Display();
-
 	window.display();
 
     while (window.isOpen())
@@ -140,7 +139,6 @@ int main(void)
 							zoom/=2.;
 
 						delete view;
-
 						view = testJuliaLocalWindowed(&window, zoom);
 
 						window.clear();
@@ -156,6 +154,8 @@ int main(void)
             }
         }
     }
+
+	delete view;
 
     #endif
 
