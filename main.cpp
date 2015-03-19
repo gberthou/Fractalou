@@ -87,11 +87,11 @@ int main(void)
 {
 
     #ifndef  WINDOW
+	MasterSocket ms(54000);
 
 	std::cout << "Fractals. Here." << std::endl;
 
 	testJuliaLocal();
-	MasterSocket ms(54000);
 	ms.AuthentificationRoutine();
 
 	#else
@@ -133,7 +133,6 @@ int main(void)
 							zoom/=2.;
 
 						delete view;
-
 						view = testJuliaLocalWindowed(&window, zoom);
 
 						window.clear();
@@ -149,6 +148,8 @@ int main(void)
             }
         }
     }
+
+	delete view;
 
     #endif
 
