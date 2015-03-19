@@ -6,6 +6,7 @@
 #include <string>
 
 #include <SFML/System.hpp>
+#include <SFML/Network.hpp>
 
 #include "QuaternionSuite.h"
 
@@ -34,8 +35,8 @@ class FractalPart
 
 		std::string ToString();
 
-		friend std::ostream& operator<<(std::ostream& os, const FractalPart& obj);
-		friend std::istream& operator>>(std::istream& is, FractalPart& obj);
+		friend sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj);
+		friend sf::Packet& operator>>(sf::Packet& is, FractalPart& obj);
 
 	private:
 		SuiteCollection suites;

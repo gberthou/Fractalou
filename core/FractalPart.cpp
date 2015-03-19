@@ -51,26 +51,28 @@ std::string FractalPart::ToString()
 	return ttos(suites.size()) + " " + ttos(results.size()) + " " + ttos(suites[0]->GetId());
 }
 
-std::ostream& operator<<(std::ostream& os, const FractalPart& obj)
+sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj)
 {
-	os << obj.suites.size();
+	sf::Uint16 size = obj.suites.size();
+	os << size;
 	SuiteCollection sc = SuiteCollection(obj.suites);
 	for(SuiteCollection::iterator it = sc.begin() ; it != sc.end(); ++it)
-		os << (**it) << std::endl;
-	os << obj.results.size();
+		os << (**it);
+	size = obj.results.size();
+	os << size;
 	ResultCollection rc = ResultCollection(obj.results);
 	for(ResultCollection::iterator it = rc.begin() ; it != rc.end(); ++it)
 	 	os << it->first << it->second;
 	return os;
 }
-std::istream& operator>>(std::istream& is, FractalPart& obj)
+sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
 {
-	size_t size;
+	sf::Uint16 size;
 	is >> size;
 	QS_Julia* qs;
 	sf::Uint32 ui;
 	double d;
-	for(size_t i = 0; i < size; ++i)
+	for(sf::Uint16 i = 0; i < size; ++i)
 	{
 		Quaternion q(0, 0, 0, 0);
 		Quaternion z0(0, 0, 0, 0);
@@ -79,7 +81,7 @@ std::istream& operator>>(std::istream& is, FractalPart& obj)
 		obj.suites.push_back(qs);
 	}
 	is >> size;
-	for(size_t i = 0; i < size; ++i)
+	for(sf::Uint16 i = 0; i < size; ++i)
 	{
 		is >> ui >> d;
 		obj.results.insert(std::pair<sf::Uint32, double>(ui, d));

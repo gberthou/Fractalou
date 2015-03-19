@@ -2,6 +2,7 @@
 #define QUATERNION_H
 
 #include <iostream>
+#include <SFML/Network.hpp>
 
 class Quaternion
 {
@@ -17,8 +18,8 @@ class Quaternion
 		Quaternion operator*(const Quaternion &q) const;
 		Quaternion operator=(Quaternion);
 
-		friend std::ostream& operator<<(std::ostream& os, const Quaternion& obj);
-		friend std::istream& operator>>(std::istream& is, Quaternion& obj);
+		friend sf::Packet& operator<<(sf::Packet& os, const Quaternion& obj);
+		friend sf::Packet& operator>>(sf::Packet& is, Quaternion& obj);
 
 	private:
 		double x;

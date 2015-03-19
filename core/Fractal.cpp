@@ -38,12 +38,3 @@ void Fractal::BuildResult(ResultCollection &result) const
 		(*it)->BuildResult(result);
 	}
 }
-
-void Fractal::TestSerialize()
-{
-	std::stringstream ss;
-	ss << parts[0];
-	std::cout << parts[0]->ToString() << std::endl;
-	ss >> *(parts[0]);
-	std::cout << parts[0]->ToString() << std::endl;
-}

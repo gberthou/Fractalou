@@ -52,12 +52,12 @@ Quaternion Quaternion::operator=(Quaternion q)
 	return *this;
 }
 
-std::ostream& operator<<(std::ostream& os, const Quaternion& obj)
+sf::Packet& operator<<(sf::Packet& os, const Quaternion& obj)
 {
 	os << obj.x << obj.y << obj.z << obj.w;	
 	return os;
 }
-std::istream& operator>>(std::istream& is, Quaternion& obj)
+sf::Packet& operator>>(sf::Packet& is, Quaternion& obj)
 {
 	is >> obj.x >> obj.y >> obj.z >> obj.w;
 	return is;

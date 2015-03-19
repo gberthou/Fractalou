@@ -33,12 +33,12 @@ sf::Uint32 QuaternionSuite::GetIterationsMax(void) const
 	return iterationsMax;
 }
 
-std::ostream& operator<<(std::ostream& os, const QuaternionSuite& obj)
+sf::Packet& operator<<(sf::Packet& os, const QuaternionSuite& obj)
 {
 	os << obj.z0 << obj.iterationsMax << obj.limit << obj.id;	
 	return os;
 }
-std::istream& operator>>(std::istream& is, QuaternionSuite& obj)
+sf::Packet& operator>>(sf::Packet& is, QuaternionSuite& obj)
 {
 	is >> obj.z0 >> obj.iterationsMax >> obj.limit >> obj.id;
 	return is;

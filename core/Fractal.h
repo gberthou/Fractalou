@@ -22,8 +22,6 @@ class Fractal
 		
 		void BuildResult(ResultCollection &result) const;
 
-		void TestSerialize();
-
 	private:
 		FractalPartCollection parts;
 };

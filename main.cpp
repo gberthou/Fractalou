@@ -36,7 +36,6 @@ void testJuliaLocal(void)
 	}
 
 	fractal.CreatePart(suites);
-    //fractal.TestSerialize();
 	fractal.ComputeResults();
 	view.Display();
 }
