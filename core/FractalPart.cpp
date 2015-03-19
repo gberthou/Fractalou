@@ -1,5 +1,6 @@
 #include "FractalPart.h"
 #include "fractals/QS_Julia.h"
+#include "Utils.h"
 
 FractalPart::FractalPart()
 {
@@ -47,7 +48,7 @@ void FractalPart::BuildResult(ResultCollection &result) const
 
 std::string FractalPart::ToString()
 {
-	return std::to_string(suites.size()) + " " + std::to_string(results.size()) + " " + std::to_string(suites[0]->GetId());
+	return ttos(suites.size()) + " " + ttos(results.size()) + " " + ttos(suites[0]->GetId());
 }
 
 std::ostream& operator<<(std::ostream& os, const FractalPart& obj)
