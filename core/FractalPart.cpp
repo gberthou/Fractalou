@@ -11,6 +11,9 @@ FractalPart::FractalPart(const SuiteCollection &asuites):
 
 FractalPart::~FractalPart()
 {
+	SuiteCollection::iterator it;
+	for(it = suites.begin(); it != suites.end(); ++it)
+		delete (*it);
 }
 
 void FractalPart::AddSuite(QuaternionSuite *suite)

@@ -107,11 +107,9 @@ int main(void)
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
-
     view = testJuliaLocalWindowed(&window, zoom);
 
 	view->Display();
-
 	window.display();
 
     while (window.isOpen())
