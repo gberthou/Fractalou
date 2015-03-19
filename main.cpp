@@ -46,6 +46,7 @@ FractalViewWindow* testJuliaLocalWindowed(sf::RenderWindow* window, double zoom)
 
 	//const Quaternion C(-0.835, 0.232, 0, 0);
 	const Quaternion C(-0.756, 0.232, 0, 0); // fractus
+	//const Quaternion C(-0.756, 0.156, 0, 0); // fractus pas beau
 	//const Quaternion C(-0.756, 0.356, 0, 0); // rose
 	//const Quaternion C(0.42, 0.42, 0, 0); // stars
 	//const Quaternion C(0.005, 0.852, 0, 0); // lightning
