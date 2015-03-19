@@ -3,7 +3,7 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-MasterSocket::MasterSocket(const int& port)
+MasterSocket::MasterSocket(const unsigned short& port)
 {
 	if(listener.listen(port) != sf::Socket::Done)
 	{
@@ -50,7 +50,7 @@ void MasterSocket::ClientRoutine(sf::TcpSocket* client)
 		else 
 		{
 			std::cout << data << std::endl;
-			if(client->send(data, 100) != sf::Socket::Done)
+			if(client->send(data, BUFFER_SIZE) != sf::Socket::Done)
 			{
 				std::cerr << "Error while trying to send data to client." << std::endl;
 			}

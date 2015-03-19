@@ -12,6 +12,9 @@ FractalPart::FractalPart(const SuiteCollection &asuites):
 
 FractalPart::~FractalPart()
 {
+	SuiteCollection::iterator it;
+	for(it = suites.begin(); it != suites.end(); ++it)
+		delete (*it);
 }
 
 void FractalPart::AddSuite(QuaternionSuite *suite)
@@ -39,8 +42,7 @@ void FractalPart::ComputeResults(void)
 void FractalPart::BuildResult(ResultCollection &result) const
 {
 	ResultCollection::const_iterator it;
-	for(it = results.begin(); it != results.end(); ++it)
-		result.insert(*it);
+	result.insert(results.begin(), results.end());
 }
 
 std::string FractalPart::ToString()

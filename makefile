@@ -13,7 +13,7 @@ RELEASE=release
 
 GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
-INCLUDE=-I"./" -I"./core" -I"./view" -I"./network"
+INCLUDE=-I"./" -I"./core" -I"./view" -I"./network" -I"./core/fractals"
 
 COREDIR=core/
 COREFILES=Quaternion.cpp QuaternionSuite.cpp FractalPart.cpp Fractal.cpp
@@ -22,10 +22,10 @@ FRACTALSDIR=core/fractals/
 FRACTALSFILES=QS_Julia.cpp
 
 VIEWDIR=view/
-VIEWFILES=FractalView.cpp FractalViewConsole.cpp
+VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp
 
 NETWORKDIR=network/
-NETWORKFILES=MasterSocket.cpp
+NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp
 
 MAINFILE=main.cpp
 

@@ -6,8 +6,8 @@
 class MasterSocket
 {
 	public:
-		MasterSocket(const int&);
-		~MasterSocket();
+		MasterSocket(const unsigned short& port);
+		virtual ~MasterSocket();
 
 		void AuthentificationRoutine(void);
 
