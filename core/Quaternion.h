@@ -1,6 +1,8 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#include <iostream>
+
 class Quaternion
 {
 	public:
@@ -13,6 +15,10 @@ class Quaternion
 		Quaternion operator+(const Quaternion &q) const;
 		Quaternion operator-(const Quaternion &q) const;
 		Quaternion operator*(const Quaternion &q) const;
+		Quaternion operator=(Quaternion);
+
+		friend std::ostream& operator<<(std::ostream& os, const Quaternion& obj);
+		friend std::istream& operator>>(std::istream& is, Quaternion& obj);
 
 	private:
 		double x;

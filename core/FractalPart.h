@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 
 #include <SFML/System.hpp>
 
@@ -30,6 +31,11 @@ class FractalPart
 
 		// BuildResult: adds all the results to the given collection
 		void BuildResult(ResultCollection &result) const;
+
+		std::string ToString();
+
+		friend std::ostream& operator<<(std::ostream& os, const FractalPart& obj);
+		friend std::istream& operator>>(std::istream& is, FractalPart& obj);
 
 	private:
 		SuiteCollection suites;

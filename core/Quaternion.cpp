@@ -43,3 +43,22 @@ Quaternion Quaternion::operator*(const Quaternion &q) const
 					  x*q.w + y*q.z - z*q.y + w*q.w);
 }
 
+Quaternion Quaternion::operator=(Quaternion q)
+{
+	this->x = q.x;
+	this->y = q.y;
+	this->z = q.z;
+	this->w = q.w;
+	return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const Quaternion& obj)
+{
+	os << obj.x << obj.y << obj.z << obj.w;	
+	return os;
+}
+std::istream& operator>>(std::istream& is, Quaternion& obj)
+{
+	is >> obj.x >> obj.y >> obj.z >> obj.w;
+	return is;
+}

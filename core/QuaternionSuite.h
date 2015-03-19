@@ -15,6 +15,9 @@ class QuaternionSuite
 		sf::Uint32 GetId(void) const;
 		sf::Uint32 GetIterationsMax(void) const;
 
+		friend std::ostream& operator<<(std::ostream& os, const QuaternionSuite& obj);
+		friend std::istream& operator>>(std::istream& is, QuaternionSuite& obj);
+
 	protected:
 		virtual Quaternion compute(const Quaternion &z) const = 0;
 		

@@ -1,5 +1,8 @@
 #include "Fractal.h"
 
+#include <sstream>
+#include <iostream>
+
 Fractal::Fractal()
 {
 }
@@ -36,3 +39,11 @@ void Fractal::BuildResult(ResultCollection &result) const
 	}
 }
 
+void Fractal::TestSerialize()
+{
+	std::stringstream ss;
+	ss << parts[0];
+	std::cout << parts[0]->ToString() << std::endl;
+	ss >> *(parts[0]);
+	std::cout << parts[0]->ToString() << std::endl;
+}

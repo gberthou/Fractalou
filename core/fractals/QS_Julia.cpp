@@ -15,3 +15,13 @@ Quaternion QS_Julia::compute(const Quaternion &z) const
 	return z * z + c;
 }
 
+std::ostream& operator<<(std::ostream& os, const QS_Julia& obj)
+{
+	os << obj.z0 << obj.iterationsMax << obj.limit << obj.c;	
+	return os;
+}
+std::istream& operator>>(std::istream& is, QS_Julia& obj)
+{
+	is >> obj.z0 >> obj.iterationsMax >> obj.limit >> obj.c;
+	return is;
+}
