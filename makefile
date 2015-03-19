@@ -24,7 +24,7 @@ FRACTALSDIR=core/fractals/
 FRACTALSFILES=QS_Julia.cpp
 
 VIEWDIR=view/
-VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp
+VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp Colors.cpp
 
 NETWORKDIR=network/
 NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp
