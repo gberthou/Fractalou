@@ -53,7 +53,7 @@ void MasterSocket::ClientRoutine(ClientRoutineParams params)
 		else 
 		{
 			sf::Packet packet;
-			packet << *(params.fractal.GetParts()[0]);
+			params.fractal.GetParts()[0]->SerializeTask(packet);
 			std::cout << data << std::endl;
 			if(params.client->send(packet) != sf::Socket::Done)
 			{
@@ -69,7 +69,7 @@ void MasterSocket::ClientRoutine(ClientRoutineParams params)
 				}
 				else 
 				{
-					packetResult >> *(params.fractal.GetParts()[0]);
+					params.fractal.GetParts()[0]->DeserializeResult(packetResult);
 					std::cout << "Job finished." << std::endl;
 					std::cout << params.fractal.GetParts()[0]->ToString() << std::endl;
 					return;

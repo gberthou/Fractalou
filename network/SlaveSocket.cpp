@@ -36,18 +36,20 @@ void SlaveSocket::Run()
 bool SlaveSocket::AskJob()
 {
 	const char out[] = "I need dis JOB";
+	sf::Packet packet;
+	
 	if (socket.send(out, sizeof(out)) != sf::Socket::Done)
 	{
 		return false;
 	}
 	std::cout << "Asking job..." << std::endl;
 
-	sf::Packet packet;
 	if (socket.receive(packet) != sf::Socket::Done)
 	{
 		return false;
 	}
-	packet >> part;
+
+	part.DeserializeTask(packet);
 	std::cout << "Job received !" << std::endl;
 
 	return true;
@@ -56,7 +58,8 @@ bool SlaveSocket::AskJob()
 bool SlaveSocket::SendData()
 {
 	sf::Packet packet;
-	packet << part;
+	part.SerializeResult(packet);
+
 	if (socket.send(packet) != sf::Socket::Done)
 	{
 		return false;

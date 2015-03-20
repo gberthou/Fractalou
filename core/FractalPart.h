@@ -37,8 +37,17 @@ class FractalPart
 
 		std::string ToString();
 
-		friend sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj);
-		friend sf::Packet& operator>>(sf::Packet& is, FractalPart& obj);
+		// Used by master
+		void SerializeTask(sf::Packet &packet) const;
+
+		// Used by slave
+		void SerializeResult(sf::Packet &packet) const;
+
+		// Used by slave
+		void DeserializeTask(sf::Packet &packet);
+
+		// Used by master
+		void DeserializeResult(sf::Packet &packet);
 
 	private:
 		SuiteCollection suites;

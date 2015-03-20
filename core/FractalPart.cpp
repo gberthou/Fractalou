@@ -58,28 +58,31 @@ ResultCollection& FractalPart::GetResults()
 	return results;
 }
 
-sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj)
+void FractalPart::SerializeTask(sf::Packet &packet) const
 {
-	sf::Uint32 size = obj.suites.size();
+	sf::Uint32 size = suites.size();
 	std::cout << "this is my sze: " << size << std::endl;
-	os << size;
-	//SuiteCollection sc = SuiteCollection(obj.suites);
-	for(SuiteCollection::const_iterator it = obj.suites.begin() ; it != obj.suites.end(); ++it)
-		(*it)->Serialize(os);
-	size = obj.results.size();
-	os << size;
-	//ResultCollection rc = ResultCollection(obj.results);
-	for(ResultCollection::const_iterator it = obj.results.begin() ; it != obj.results.end(); ++it)
-	 	os << it->first << it->second;
-	return os;
+	packet << size;
+	
+	for(SuiteCollection::const_iterator it = suites.begin() ; it != suites.end(); ++it)
+		(*it)->Serialize(packet);
 }
-sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
+
+void FractalPart::SerializeResult(sf::Packet &packet) const
 {
-	sf::Uint32 size;
-	is >> size;
+	sf::Uint32 size = results.size();
+	packet << size;
+	
+	for(ResultCollection::const_iterator it = results.begin() ; it != results.end(); ++it)
+	 	packet << it->first << it->second;
+}
+
+void FractalPart::DeserializeTask(sf::Packet &packet)
+{
+	sf::Uint32 size;	
 	QS_Julia* qs;
-	sf::Uint32 ui;
-	double d;
+
+	packet >> size;
 
 	std::cout << "Nb px: " << size << std::endl;
 	for(sf::Uint32 i = 0; i < size; ++i)
@@ -87,14 +90,22 @@ sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
 		Quaternion q(0, 0, 0, 0);
 		Quaternion z0(0, 0, 0, 0);
 		qs = new QS_Julia(1, z0, q, 0, 0);
-		qs->DeSerialize(is);
-		obj.suites.push_back(qs);
+		qs->DeSerialize(packet);
+		suites.push_back(qs);
 	}
-	is >> size;
+}
+
+void FractalPart::DeserializeResult(sf::Packet &packet)
+{
+	sf::Uint32 size;
+	sf::Uint32 ui;
+	double d;
+	
+	packet >> size;
 	for(sf::Uint32 i = 0; i < size; ++i)
 	{
-		is >> ui >> d;
-		obj.results.insert(std::pair<sf::Uint32, double>(ui, d));
+		packet >> ui >> d;
+		results.insert(ResultPair(ui, d));
 	}
-	return is;
 }
+
