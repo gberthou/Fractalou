@@ -87,9 +87,7 @@ void FractalPart::DeserializeTask(sf::Packet &packet)
 	std::cout << "Nb px: " << size << std::endl;
 	for(sf::Uint32 i = 0; i < size; ++i)
 	{
-		Quaternion q(0, 0, 0, 0);
-		Quaternion z0(0, 0, 0, 0);
-		qs = new QS_Julia(1, z0, q, 0, 0);
+		qs = new QS_Julia();
 		qs->DeSerialize(packet);
 		suites.push_back(qs);
 	}
