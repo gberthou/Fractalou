@@ -38,9 +38,6 @@ void FractalPart::ComputeResults(void)
 	{
 		sf::Uint32 r = (*it)->ComputeIterationNumber();
 		sf::Uint32 itMax = (*it)->GetIterationsMax();
-
-		std::cout << r << " " << itMax << std::endl;
-
 		results.insert(ResultPair((*it)->GetId(), (double)r/itMax));
 	}
 }
