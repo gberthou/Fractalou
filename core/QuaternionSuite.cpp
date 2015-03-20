@@ -1,5 +1,12 @@
 #include "QuaternionSuite.h"
 
+QuaternionSuite::QuaternionSuite():
+	iterationsMax(0),
+	limit(0),
+	id(-1)
+{
+}
+
 QuaternionSuite::QuaternionSuite(sf::Uint32 aid, const Quaternion &az0, sf::Uint32 itMax, double alimit):
 	z0(az0),
 	iterationsMax(itMax),
