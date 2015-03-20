@@ -16,8 +16,8 @@ class QuaternionSuite
 		sf::Uint32 GetId(void) const;
 		sf::Uint32 GetIterationsMax(void) const;
 
-		friend sf::Packet& operator<<(sf::Packet& os, const QuaternionSuite& obj);
-		friend sf::Packet& operator>>(sf::Packet& is, QuaternionSuite& obj);
+		virtual void Serialize(sf::Packet&) = 0;
+		virtual void DeSerialize(sf::Packet&) = 0;
 
 	protected:
 		virtual Quaternion compute(const Quaternion &z) const = 0;

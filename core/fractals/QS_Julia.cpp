@@ -15,13 +15,12 @@ Quaternion QS_Julia::compute(const Quaternion &z) const
 	return z * z + c;
 }
 
-sf::Packet& operator<<(sf::Packet& os, const QS_Julia& obj)
+void QS_Julia::Serialize(sf::Packet& os)
 {
-	os << obj.z0 << obj.iterationsMax << obj.limit << obj.c;	
-	return os;
+	os << z0 << iterationsMax << limit << c;
 }
-sf::Packet& operator>>(sf::Packet& is, QS_Julia& obj)
+
+void QS_Julia::DeSerialize(sf::Packet& is)
 {
-	is >> obj.z0 >> obj.iterationsMax >> obj.limit >> obj.c;
-	return is;
+	is >> z0 >> iterationsMax >> limit >> c;
 }

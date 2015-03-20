@@ -11,8 +11,8 @@ class QS_Julia : public QuaternionSuite
 		QS_Julia(sf::Uint32 id, const Quaternion &z0, const Quaternion &c, sf::Uint32 iterationsMax, double limit);
 		virtual ~QS_Julia();
 
-		friend sf::Packet& operator<<(sf::Packet& os, const QS_Julia& obj);
-		friend sf::Packet& operator>>(sf::Packet& is, QS_Julia& obj);
+		void Serialize(sf::Packet&);
+		void DeSerialize(sf::Packet&);
 
 	protected:
 		virtual Quaternion compute(const Quaternion &z) const;

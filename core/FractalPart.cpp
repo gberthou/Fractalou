@@ -2,6 +2,8 @@
 #include "fractals/QS_Julia.h"
 #include "Utils.h"
 
+#include <iostream>
+
 FractalPart::FractalPart()
 {
 }
@@ -36,6 +38,9 @@ void FractalPart::ComputeResults(void)
 	{
 		sf::Uint32 r = (*it)->ComputeIterationNumber();
 		sf::Uint32 itMax = (*it)->GetIterationsMax();
+
+		std::cout << r << " " << itMax << std::endl;
+
 		results.insert(ResultPair((*it)->GetId(), (double)r/itMax));
 	}
 }
@@ -63,7 +68,7 @@ sf::Packet& operator<<(sf::Packet& os, const FractalPart& obj)
 	os << size;
 	//SuiteCollection sc = SuiteCollection(obj.suites);
 	for(SuiteCollection::const_iterator it = obj.suites.begin() ; it != obj.suites.end(); ++it)
-		os << (**it);
+		(*it)->Serialize(os);
 	size = obj.results.size();
 	os << size;
 	//ResultCollection rc = ResultCollection(obj.results);
@@ -85,7 +90,7 @@ sf::Packet& operator>>(sf::Packet& is, FractalPart& obj)
 		Quaternion q(0, 0, 0, 0);
 		Quaternion z0(0, 0, 0, 0);
 		qs = new QS_Julia(1, z0, q, 0, 0);
-		is >> *qs;
+		qs->DeSerialize(is);
 		obj.suites.push_back(qs);
 	}
 	is >> size;
