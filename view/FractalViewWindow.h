@@ -21,6 +21,7 @@ class FractalViewWindow : public FractalView
         unsigned int height;
         sf::Sprite sprite;
         sf::Texture texture;
+		sf::Uint8 *pixels;
 };
 
 #endif // FRACTALVIEWWINDOW_H

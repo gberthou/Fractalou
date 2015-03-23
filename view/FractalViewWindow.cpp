@@ -8,14 +8,15 @@ FractalViewWindow::FractalViewWindow(const Fractal *f, sf::RenderWindow *win, un
 	FractalView(f),
 	window(win),
 	width(w),
-	height(h)
+	height(h),
+	pixels(0)
 {
     //ctor
 }
 
 FractalViewWindow::~FractalViewWindow()
 {
-    //dtor
+	delete [] pixels;
 }
 
 void FractalViewWindow::Display(void) const
@@ -28,6 +29,9 @@ bool FractalViewWindow::Initialize(void)
 	bool res = texture.create(width, height);
 	if(res)
 	{
+		pixels = new sf::Uint8[width * height * 4];
+		for(unsigned int i = width * height * 4; i != 0; pixels[--i] = 0);
+		
 		texture.setSmooth(true);
 		sprite.setTexture(texture);
 	}
@@ -39,8 +43,6 @@ void FractalViewWindow::BuildImage(void)
     ResultCollection result;
 	ResultCollection::const_iterator it;
     
-	sf::Uint8* pixels = new sf::Uint8[width * height * 4];
-
 	fractal->BuildResult(result);
 
 	std::cout << "There are " << result.size() << " results." << std::endl;
@@ -57,6 +59,5 @@ void FractalViewWindow::BuildImage(void)
     std::cout << "done" << std::endl;
 
 	texture.update(pixels);
-	delete[] pixels;
 }
 
