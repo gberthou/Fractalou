@@ -84,6 +84,9 @@ void FractalPart::DeserializeTask(sf::Packet &packet)
 
 	packet >> size;
 
+	suites.clear();
+	suites.reserve(size); // Optimization
+
 	std::cout << "Nb px: " << size << std::endl;
 	for(sf::Uint32 i = 0; i < size; ++i)
 	{

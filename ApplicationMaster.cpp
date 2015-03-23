@@ -8,7 +8,7 @@
 const unsigned int WINDOW_W = 1280;
 const unsigned int WINDOW_H = 720;
 
-const unsigned int MAX_SUITES_PER_PART = 100;
+const unsigned int MAX_SUITES_PER_PART = 1000;
 
 static unsigned int getPartNumber(unsigned int width, unsigned int height)
 {

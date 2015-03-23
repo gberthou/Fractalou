@@ -1,9 +1,19 @@
 #ifndef MASTER_SOCKET_H
 #define MASTER_SOCKET_H
 
-#include "../core/Fractal.h"
-
 #include <SFML/Network.hpp>
+
+#include "Fractal.h"
+#include "JobList.h"
+
+class MasterSocket;
+
+struct ClientRoutineParams
+{
+	MasterSocket *msocket;
+	sf::TcpSocket* client;
+	const Fractal& fractal;
+};
 
 class MasterSocket
 {
@@ -14,15 +24,12 @@ class MasterSocket
 		void AuthentificationRoutine(void);
 
 	protected:
-		struct ClientRoutineParams {
-			sf::TcpSocket* client;
-			const Fractal& fractal;
-		};
 
 		sf::TcpListener listener;
 		static const size_t BUFFER_SIZE = 100; // FIXME
 		std::vector<sf::TcpSocket*> clients;
 		Fractal fractal;
+		JobList *jobList;
 
 		static void ClientRoutine(ClientRoutineParams params); 
 };

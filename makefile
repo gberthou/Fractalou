@@ -27,7 +27,7 @@ VIEWDIR=view/
 VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp Colors.cpp
 
 NETWORKDIR=network/
-NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp
+NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp JobList.cpp
 
 MAINFILE=main.cpp
 
