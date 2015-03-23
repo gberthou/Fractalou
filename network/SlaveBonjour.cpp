@@ -1,9 +1,8 @@
 #include "SlaveBonjour.h"
 
-#include <SFML/System.hpp>
 #include <iostream>
 
-SlaveBonjour::SlaveBonjour(const unsigned short& a_port)
+SlaveBonjour::SlaveBonjour(const unsigned short& a_port, sf:Time a_sleep)
 {
 	if (bjr.bind(a_port) != sf::Socket::Done)
 	{
@@ -11,6 +10,7 @@ SlaveBonjour::SlaveBonjour(const unsigned short& a_port)
 		return;
 	}
 	port = a_port;
+	sleepTime = a_sleep;
 }
 
 SlaveBonjour::~SlaveBonjour()
@@ -34,6 +34,7 @@ void SlaveBonjour::authentificationRoutine()
 		{
 			std::cout << "Bonjour broadcasted on port " << port << std::endl;
 		}
+		sf::sleep(sleepTime);
 	}
 }
 
