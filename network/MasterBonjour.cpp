@@ -1,5 +1,7 @@
-#include "MasterBonjour.h"
 #include <iostream>
+
+#include "MasterBonjour.h"
+#include "Bonjour.h"
 
 MasterBonjour::MasterBonjour(unsigned short aport):
 	port(aport)
@@ -28,22 +30,36 @@ void MasterBonjour::Run()
 
 void MasterBonjour::authentificationRoutine(MasterBonjour *socket)
 {
-	sf::Packet packet;
+	sf::Uint8 id;
 	sf::IpAddress sender;
-
+	
 	while(1)
 	{
-		if (socket->bjr.receive(packet, sender, socket->port) != sf::Socket::Done)
+		sf::Packet inPacket;
+		sf::Packet outPacket;
+		
+		if (socket->bjr.receive(inPacket, sender, socket->port) != sf::Socket::Done)
 		{
 			std::cerr << "Failed to recognize bonjour request." << std::endl;
+			continue;
 		}
-		else if (socket->bjr.send(packet, sender, socket->port) != sf::Socket::Done)
+		
+		inPacket >> id;
+		if(id != BONJOUR_ASK_JOB)
 		{
-			std::cerr << "Failed to answer bonjour to " << sender << "on port " << socket->port << std::endl;
+			std::cerr << "Received wrong bonjour request." << std::endl;
+			continue;
+		}
+		
+		outPacket << BONJOUR_RESPONSE;
+
+		if (socket->bjr.send(outPacket, sender, socket->port) != sf::Socket::Done)
+		{
+			std::cerr << "Failed to answer bonjour to " << sender << " on port " << socket->port << std::endl;
 		}
 		else
 		{
-			std::cout << "Bonjour process done with " << sender << "on port " << socket->port << std::endl;
+			std::cout << "Bonjour process done with " << sender << " on port " << socket->port << std::endl;
 		}
 	}
 }

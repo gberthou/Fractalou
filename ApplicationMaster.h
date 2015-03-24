@@ -3,6 +3,7 @@
 
 #include "Application.h"
 #include "MasterSocket.h"
+#include "MasterBonjour.h"
 
 class ApplicationMaster : public Application
 {
@@ -13,6 +14,7 @@ class ApplicationMaster : public Application
 		virtual bool Run(void);
 
 	protected:
+		MasterBonjour *bonjour;
 		MasterSocket *socket;
 };
 

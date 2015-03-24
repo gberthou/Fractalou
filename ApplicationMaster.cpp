@@ -4,6 +4,7 @@
 #include "ApplicationMaster.h"
 #include "FractalViewWindow.h"
 #include "QS_Julia.h"
+#include "Bonjour.h"
 
 const unsigned int WINDOW_W = 1280;
 const unsigned int WINDOW_H = 720;
@@ -67,8 +68,6 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 		return 0;
 	}
 
-	while(fractal->GetParts()[0]->GetResults().size() == 0) {}
-	
 	std::cout << "Building image..." << std::endl;
 	view->BuildImage();
 	std::cout << "Image built!" << std::endl;
@@ -77,17 +76,31 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 }
 
 ApplicationMaster::ApplicationMaster():
+	bonjour(0),
 	socket(0)
 {
 }
 
 ApplicationMaster::~ApplicationMaster()
 {
+	if(bonjour != 0)
+		delete bonjour;
 	if(socket != 0)
 		delete socket;
 }
 
+bool ApplicationMaster::Run(void)
+{
+	bonjour = new MasterBonjour(BONJOUR_PORT);
+	if(!bonjour->Initialize())
+		return false;
 
+	bonjour->Run();
+
+	return true;
+}
+
+/*
 bool ApplicationMaster::Run(void)
 {
 	Fractal *fractal;
@@ -130,14 +143,13 @@ bool ApplicationMaster::Run(void)
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
 							zoom/=2.;
 
-						/*
+						
 						delete view;
 						view = testJuliaLocalWindowed(&window, zoom);
 
 						window.clear();
 						view->Display();
 						window.display();
-						*/
 					}
 					break;
 				case sf::Event::Closed:
@@ -154,4 +166,5 @@ bool ApplicationMaster::Run(void)
 	
 	return true;
 }
+*/
 

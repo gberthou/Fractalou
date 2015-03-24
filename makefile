@@ -12,7 +12,7 @@ DEBUG=debug
 RELEASE=release
 
 GPP=g++
-CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic -Werror
+CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic #-Werror
 INCLUDE=-I"./" -I"./core" -I"./view" -I"./network" -I"./core/fractals"
 
 BASEFILES=Options.cpp Application.cpp ApplicationMaster.cpp ApplicationSlave.cpp
@@ -27,7 +27,7 @@ VIEWDIR=view/
 VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp Colors.cpp
 
 NETWORKDIR=network/
-NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp MasterBonjour.cpp SlaveBonjour.cpp JobList.cpp
+NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp Bonjour.cpp MasterBonjour.cpp SlaveBonjour.cpp JobList.cpp
 
 MAINFILE=main.cpp
 

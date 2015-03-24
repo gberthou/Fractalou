@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "SlaveBonjour.h"
+#include "Bonjour.h"
 
 SlaveBonjour::SlaveBonjour(unsigned short aport, sf::Time asleep):
 	port(aport),
@@ -14,11 +15,13 @@ SlaveBonjour::~SlaveBonjour()
 
 bool SlaveBonjour::Initialize(void)
 {
+	/*
 	if (bjr.bind(port) != sf::Socket::Done)
 	{
 		std::cerr << "Failed to initialize bonjour as slave." << std::endl;
 		return false;
 	}
+	*/
 	return true;
 }
 
@@ -47,6 +50,7 @@ bool SlaveBonjour::GetMaster(sf::IpAddress &server)
 void SlaveBonjour::authentificationRoutine(SlaveBonjour *socket)
 {
 	sf::Packet bonjourPacket;
+	bonjourPacket << BONJOUR_ASK_JOB;
 
 	while(1)
 	{
