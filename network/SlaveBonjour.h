@@ -4,22 +4,25 @@
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 
+#include <vector>
+
 class SlaveBonjour
 {
 	public:
-		SlaveBonjour(const unsigned short& a_port, sf:Time a_sleep);
+		SlaveBonjour(unsigned short aport, sf::Time asleep);
 		virtual ~SlaveBonjour();
-		void Run();
-		bool GetMaster();
+
+		bool Initialize(void);
+		void Run(void);
+		//bool GetMaster();
 		
 	protected:
-		void authentificationRoutine();
+		static void authentificationRoutine(SlaveBonjour *socket);
+
 		sf::UdpSocket bjr;
-		static const size_t BUFFER_SIZE = 100; // FIXME
-		char data[BUFFER_SIZE];
-		std::vector<sf::IpAddress&> servers;
-		const unsigned short& port;
-		sf:Time sleepTime;
+		std::vector<sf::IpAddress> servers;
+		unsigned short port;
+		sf::Time sleepTime;
 		
 };
 

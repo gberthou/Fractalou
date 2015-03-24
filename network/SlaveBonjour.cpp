@@ -1,43 +1,34 @@
-#include "SlaveBonjour.h"
-
 #include <iostream>
 
-SlaveBonjour::SlaveBonjour(const unsigned short& a_port, sf:Time a_sleep)
+#include "SlaveBonjour.h"
+
+SlaveBonjour::SlaveBonjour(unsigned short aport, sf::Time asleep):
+	port(aport),
+	sleepTime(asleep)
 {
-	if (bjr.bind(a_port) != sf::Socket::Done)
-	{
-		std::cerr << "Failed to initialize bonjour as slave." << std::endl;
-		return;
-	}
-	port = a_port;
-	sleepTime = a_sleep;
 }
 
 SlaveBonjour::~SlaveBonjour()
 {
 }
 
+bool SlaveBonjour::Initialize(void)
+{
+	if (bjr.bind(port) != sf::Socket::Done)
+	{
+		std::cerr << "Failed to initialize bonjour as slave." << std::endl;
+		return false;
+	}
+	return true;
+}
+
 void SlaveBonjour::Run()
 {
-	sf::Thread thread(&SlaveBonjour::authentificationRoutine);
+	sf::Thread thread(&SlaveBonjour::authentificationRoutine, this);
 	thread.launch();
 }
 
-void SlaveBonjour::authentificationRoutine()
-{
-	while(1)
-	{
-		if (bjr.send(data, BUFFER_SIZE, sf::IpAddress::Broadcast, port) != sf::Socket::Done)
-		{
-			std::cerr << "Failed to send bonjour request." << std::endl;
-		} else 
-		{
-			std::cout << "Bonjour broadcasted on port " << port << std::endl;
-		}
-		sf::sleep(sleepTime);
-	}
-}
-
+/*
 bool SlaveBonjour::GetMaster(sf::IpAddress &server)
 {
 		if (bjr.receive(data, BUFFER_SIZE, received, server, port) != sf::Socket::Done)
@@ -51,3 +42,24 @@ bool SlaveBonjour::GetMaster(sf::IpAddress &server)
 		std::cout << "Bonjour process done with " << server << "on port " << port << std::endl;
 		return true;
 }
+*/
+
+void SlaveBonjour::authentificationRoutine(SlaveBonjour *socket)
+{
+	sf::Packet bonjourPacket;
+
+	while(1)
+	{
+		if (socket->bjr.send(bonjourPacket, sf::IpAddress::Broadcast, socket->port) != sf::Socket::Done)
+		{
+			std::cerr << "Failed to send bonjour request." << std::endl;
+		}
+		else 
+		{
+			std::cout << "Bonjour broadcasted on port " << socket->port << std::endl;
+		}
+
+		sf::sleep(socket->sleepTime);
+	}
+}
+

@@ -6,16 +6,18 @@
 class MasterBonjour
 {
 	public:
-		MasterBonjour(const unsigned short& a_port);
+		MasterBonjour(unsigned short aport);
 		virtual ~MasterBonjour();
+
+		bool Initialize(void);
 		void Run(void);
 
 	protected:
-		void authentificationRoutine(void);
+		static void authentificationRoutine(MasterBonjour *socket);
+
 		sf::UdpSocket bjr;
-		static const size_t BUFFER_SIZE = 100; // FIXME
-		char data[BUFFER_SIZE];
-		const unsigned short& port;
+		unsigned short port;
 };
 
 #endif
+
