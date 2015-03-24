@@ -91,7 +91,7 @@ ApplicationMaster::~ApplicationMaster()
 
 bool ApplicationMaster::Run(void)
 {
-	bonjour = new MasterBonjour(BONJOUR_PORT);
+	bonjour = new MasterBonjour(BONJOUR_ASK_PORT);
 	if(!bonjour->Initialize())
 		return false;
 

@@ -9,7 +9,7 @@
 class SlaveBonjour
 {
 	public:
-		SlaveBonjour(unsigned short aport, sf::Time asleep);
+		SlaveBonjour(unsigned short askPort, sf::Time asleep);
 		virtual ~SlaveBonjour();
 
 		bool Initialize(void);
@@ -17,13 +17,15 @@ class SlaveBonjour
 		//bool GetMaster();
 		
 	protected:
-		static void authentificationRoutine(SlaveBonjour *socket);
+		static void askJobRoutine(SlaveBonjour *socket);
+		static void responseRoutine(SlaveBonjour *socket);
 
-		sf::UdpSocket bjr;
+		sf::UdpSocket askSocket;
+
 		std::vector<sf::IpAddress> servers;
-		unsigned short port;
+		unsigned short askPort;
+		unsigned short responsePort;
 		sf::Time sleepTime;
-		
 };
 
 #endif
