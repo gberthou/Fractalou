@@ -6,13 +6,6 @@
 
 const float MASTER_PERSISTENCE = 20; // seconds
 
-bool operator<(const MasterDesc &d1, const MasterDesc &d2)
-{
-	if(d1.address.toInteger() < d2.address.toInteger())
-		return true;
-	return d1.port < d2.port;
-}
-
 SlaveBonjour::SlaveBonjour(ApplicationSlave *application, unsigned short aport, sf::Time asleep):
 	app(application),
 	askPort(aport),
@@ -67,7 +60,7 @@ void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
 	unsigned short recvPort;
 	sf::Uint8 id;
 	sf::Uint16 masterPort;
-	MasterDesc desc;
+	MachineDesc desc;
 
 	std::cout << "waiting..." << std::endl;
 
@@ -100,14 +93,14 @@ void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
 
 void SlaveBonjour::chooseMasterAndConnect(void)
 {
-	std::map<MasterDesc, sf::Clock>::iterator it;
+	std::map<MachineDesc, sf::Clock>::iterator it;
 
 	// First, erase masters that are "persistence timed out"
 	for(it = masters.begin(); it != masters.end();)
 	{
 		if(it->second.getElapsedTime().asSeconds() > MASTER_PERSISTENCE)
 		{
-			std::map<MasterDesc, sf::Clock>::iterator tmp = it++;
+			std::map<MachineDesc, sf::Clock>::iterator tmp = it++;
 			masters.erase(tmp);
 		}
 		else

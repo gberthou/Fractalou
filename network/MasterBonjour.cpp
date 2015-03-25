@@ -2,8 +2,10 @@
 
 #include "MasterBonjour.h"
 #include "Bonjour.h"
+#include "ApplicationMaster.h"
 
-MasterBonjour::MasterBonjour(unsigned short aport):
+MasterBonjour::MasterBonjour(ApplicationMaster *application, unsigned short aport):
+	app(application),
 	port(aport)
 {
 }
@@ -19,22 +21,13 @@ bool MasterBonjour::Initialize(void)
 		std::cerr << "Failed to initialize bonjour as master." << std::endl;
 		return false;
 	}
-
-	if(listener.listen(sf::Socket::AnyPort) != sf::Socket::Done)
-	{
-		std::cerr << "Failed to setup TCP listener." << std::endl;
-	}
-
-	listenerPort = listener.getLocalPort();
-	std::cout << "TCP listener set on port " << listenerPort << std::endl;
-
 	return true;
 }
 
 void MasterBonjour::Run()
 {
-	sf::Thread thread(&MasterBonjour::ackJobRoutine, this);
-	thread.launch();
+	sf::Thread threadAck(&MasterBonjour::ackJobRoutine, this);
+	threadAck.launch();
 }
 
 void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
@@ -59,7 +52,8 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 			std::cerr << "Received wrong bonjour request. (" << (int)id << ")" << std::endl;
 			continue;
 		}
-		
+	
+		/*	
 		outPacket << BONJOUR_RESPONSE << (sf::Uint16)socket->listenerPort;
 
 		if (socket->bjr.send(outPacket, sender, socket->port) != sf::Socket::Done)
@@ -70,6 +64,7 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 		{
 			std::cout << "Bonjour process done with " << sender << " on port " << socket->port << std::endl;
 		}
+		*/
 	}
 }
 

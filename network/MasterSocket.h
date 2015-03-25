@@ -10,28 +10,28 @@ class MasterSocket;
 
 struct ClientRoutineParams
 {
-	MasterSocket *msocket;
-	sf::TcpSocket* client;
-	const Fractal& fractal;
+	MasterSocket *socket;
+	sf::TcpSocket &client;
 };
 
 class MasterSocket
 {
 	public:
-		MasterSocket(const unsigned short& port, const Fractal&);
+		MasterSocket(Fractal *fractal);
 		virtual ~MasterSocket();
 
-		void AuthentificationRoutine(void);
+		bool Initialize(void);
+		void Run(void);
 
 	protected:
+		static void authentificationRoutine(MasterSocket *socket);
+		static void clientRoutine(ClientRoutineParams params); 
 
 		sf::TcpListener listener;
-		static const size_t BUFFER_SIZE = 100; // FIXME
-		std::vector<sf::TcpSocket*> clients;
-		Fractal fractal;
+		//std::vector<sf::TcpSocket> clients;
+		unsigned short port;
+		Fractal *fractal;
 		JobList *jobList;
-
-		static void ClientRoutine(ClientRoutineParams params); 
 };
 
 #endif

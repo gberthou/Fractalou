@@ -15,7 +15,7 @@ GPP=g++
 CFLAGS=-Wall -Wextra -Wmissing-braces -pedantic #-Werror
 INCLUDE=-I"./" -I"./core" -I"./view" -I"./network" -I"./core/fractals"
 
-BASEFILES=Options.cpp Application.cpp ApplicationMaster.cpp ApplicationSlave.cpp
+BASEFILES=Options.cpp Application.cpp ApplicationMaster.cpp ApplicationMasterWindow.cpp ApplicationSlave.cpp
 
 COREDIR=core/
 COREFILES=Quaternion.cpp QuaternionSuite.cpp FractalPart.cpp Fractal.cpp
@@ -27,7 +27,7 @@ VIEWDIR=view/
 VIEWFILES=FractalView.cpp FractalViewConsole.cpp FractalViewWindow.cpp Colors.cpp
 
 NETWORKDIR=network/
-NETWORKFILES=MasterSocket.cpp SlaveSocket.cpp Bonjour.cpp MasterBonjour.cpp SlaveBonjour.cpp JobList.cpp
+NETWORKFILES=netcommon.cpp MasterSocket.cpp SlaveSocket.cpp Bonjour.cpp MasterBonjour.cpp SlaveBonjour.cpp JobList.cpp
 
 MAINFILE=main.cpp
 

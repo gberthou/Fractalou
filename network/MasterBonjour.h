@@ -3,22 +3,24 @@
 
 #include <SFML/Network.hpp>
 
+class ApplicationMaster;
+
 class MasterBonjour
 {
 	public:
-		MasterBonjour(unsigned short aport);
+		MasterBonjour(ApplicationMaster *master, unsigned short aport);
 		virtual ~MasterBonjour();
 
 		bool Initialize(void);
 		void Run(void);
 
 	protected:
+		// Routine that waits for job requests and responds to them
 		static void ackJobRoutine(MasterBonjour *socket);
 
+		ApplicationMaster *app;
 		sf::UdpSocket bjr; // Broadcast
-		sf::TcpListener listener; // Gets new connections from slaves
 		unsigned short port;
-		unsigned short listenerPort;
 };
 
 #endif

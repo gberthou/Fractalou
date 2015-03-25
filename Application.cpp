@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ApplicationMaster.h"
+#include "ApplicationMasterWindow.h"
 #include "ApplicationSlave.h"
 #include "Options.h"
 
@@ -19,7 +19,7 @@ Application *Application::GetApplication(int argc, char **argv)
 	if(options.HasMaster())
 	{
 		std::cout << "Running master..." << std::endl;
-		return new ApplicationMaster();
+		return new ApplicationMasterWindow();
 	}
 
 	std::cout << "Running slave..." << std::endl;

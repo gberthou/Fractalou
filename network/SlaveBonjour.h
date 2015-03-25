@@ -6,13 +6,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 
-struct MasterDesc
-{
-	sf::IpAddress address;
-	unsigned short port;
-};
-
-bool operator<(const MasterDesc &d1, const MasterDesc &d2);
+#include "netcommon.h"
 
 class ApplicationSlave;
 
@@ -40,7 +34,7 @@ class SlaveBonjour
 		ApplicationSlave *app;
 		sf::UdpSocket askSocket;
 
-		std::map<MasterDesc, sf::Clock> masters;
+		std::map<MachineDesc, sf::Clock> masters;
 		unsigned short askPort;
 		unsigned short responsePort;
 		sf::Time sleepTime;

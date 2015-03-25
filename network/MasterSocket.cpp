@@ -3,16 +3,27 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-MasterSocket::MasterSocket(const unsigned short& port, const Fractal& f) :
+MasterSocket::MasterSocket(Fractal *f):
 	fractal(f)
 {
-	FractalPartCollection parts = f.GetParts();
+}
 
-	if(listener.listen(port) != sf::Socket::Done)
+MasterSocket::~MasterSocket()
+{
+	listener.close();
+}
+
+bool MasterSocket::Initialize(void)
+{
+	FractalPartCollection parts = fractal->GetParts();
+
+	if(listener.listen(sf::Socket::AnyPort) != sf::Socket::Done)
 	{
 		std::cerr << "Failed to initialize master socket." << std::endl;
-		std::exit(1);
+		return false;
 	}
+
+	std::cout << "TCP listener set on port " << listener.getLocalPort() << std::endl;
 
 	if(parts.size() > 0)
 	{
@@ -25,75 +36,74 @@ MasterSocket::MasterSocket(const unsigned short& port, const Fractal& f) :
 			tmp = new JobList(tmp, parts[i]);
 		}
 	}
+	return true;
 }
 
-MasterSocket::~MasterSocket() {
-	for (std::vector<sf::TcpSocket*>::iterator it = clients.begin() ; it != clients.end(); ++it)
-		delete *it;
-	listener.close();
+void MasterSocket::Run(void)
+{
+	sf::Thread threadAuth(&MasterSocket::authentificationRoutine, this);
+	threadAuth.launch();
 }
 
-void MasterSocket::AuthentificationRoutine(void)
+void MasterSocket::authentificationRoutine(MasterSocket *socket)
 {
 	while(1)
 	{
-		sf::TcpSocket* client = new sf::TcpSocket;
-		if (listener.accept(*client) != sf::Socket::Done)
+		sf::TcpSocket client;
+		if (socket->listener.accept(client) != sf::Socket::Done)
 		{
 			std::cerr << "Failed when accepting connection." << std::endl;
-			exit(1);
-		} else {
-			clients.push_back(client);
-			ClientRoutineParams p = {this, client, fractal};
-			sf::Thread thread(&MasterSocket::ClientRoutine, p);
+			continue;
+		}
+		else
+		{
+			ClientRoutineParams params = {socket, client};
+			//socket->clients.push_back(client);
+			
+			// :/
+			sf::Thread thread(&MasterSocket::clientRoutine, params);
 			thread.launch();
-			return;
 		}
 	}
 }
 
-void MasterSocket::ClientRoutine(ClientRoutineParams params)
+void MasterSocket::clientRoutine(ClientRoutineParams params)
 {
-	char data[MasterSocket::BUFFER_SIZE];
-	std::size_t received;
-
-	sf::sleep(sf::milliseconds(20));
-
 	while(1)
 	{
-		if(params.client->receive(data, MasterSocket::BUFFER_SIZE, received) != sf::Socket::Done)
+		sf::Packet inPacket;
+		sf::Packet outPacket;
+		FractalPart *part;
+		
+		if(params.client.receive(inPacket) != sf::Socket::Done)
 		{
 			std::cerr << "Connection lost." << std::endl;
 			return;
 		} 
-		else 
-		{
-			sf::Packet packet;
-			FractalPart *part = params.msocket->jobList->GetPart(); // Get the current job part
 
-			part->SerializeTask(packet);
-			std::cout << data << std::endl;
-			if(params.client->send(packet) != sf::Socket::Done)
+		part = params.socket->jobList->GetPart(); // Get the current job part
+		part->SerializeTask(outPacket);
+		
+		if(params.client.send(outPacket) != sf::Socket::Done)
+		{
+			std::cerr << "Error while trying to send data to client." << std::endl;
+		}
+		else
+		{
+			sf::Packet packetResult;
+			
+			params.socket->jobList = params.socket->jobList->GetNext(); // Let's rotate the list!
+			
+			std::cout << "Data sent to client." << std::endl;
+			if(params.client.receive(packetResult) != sf::Socket::Done)
 			{
-				std::cerr << "Error while trying to send data to client." << std::endl;
+				std::cerr << "Connection lost." << std::endl;
 			}
-			else
+			else 
 			{
-				sf::Packet packetResult;
-				
-				params.msocket->jobList = params.msocket->jobList->GetNext(); // Let's rotate the list!
-				
-				std::cout << "Data sent to client." << std::endl;
-				if(params.client->receive(packetResult) != sf::Socket::Done)
-				{
-					std::cerr << "Connection lost." << std::endl;
-				}
-				else 
-				{
-					part->DeserializeResult(packetResult);
-					std::cout << "Job finished." << std::endl;
-					std::cout << part->ToString() << std::endl;
-				}
+				part->DeserializeResult(packetResult);
+				std::cout << "Job finished." << std::endl;
+				std::cout << part->ToString() << std::endl;
 			}
 		}
 	}
