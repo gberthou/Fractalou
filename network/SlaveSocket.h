@@ -8,17 +8,19 @@
 class SlaveSocket
 {
 	public:
-		SlaveSocket(const sf::IpAddress server, const unsigned short& port);
+		SlaveSocket(const sf::IpAddress &server, unsigned short port);
 		virtual ~SlaveSocket();
-		void Run();
+		
+		void Run(void);
+		bool Initialize(void);
 
 	protected:
+		sf::IpAddress masterAddress;
+		unsigned short masterPort;	
 		sf::TcpSocket socket;
-		static const size_t BUFFER_SIZE = 100; // FIXME
-		char data[BUFFER_SIZE];
+
 		FractalPart part;
 
-		bool AskJob();
 		bool SendData();
 };
 

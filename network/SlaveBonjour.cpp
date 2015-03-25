@@ -2,8 +2,19 @@
 
 #include "SlaveBonjour.h"
 #include "Bonjour.h"
+#include "ApplicationSlave.h"
 
-SlaveBonjour::SlaveBonjour(unsigned short aport, sf::Time asleep):
+const float MASTER_PERSISTENCE = 20; // seconds
+
+bool operator<(const MasterDesc &d1, const MasterDesc &d2)
+{
+	if(d1.address.toInteger() < d2.address.toInteger())
+		return true;
+	return d1.port < d2.port;
+}
+
+SlaveBonjour::SlaveBonjour(ApplicationSlave *application, unsigned short aport, sf::Time asleep):
+	app(application),
 	askPort(aport),
 	sleepTime(asleep)
 {
@@ -15,14 +26,6 @@ SlaveBonjour::~SlaveBonjour()
 
 bool SlaveBonjour::Initialize(void)
 {
-	/*
-	if (askSocket.bind(port) != sf::Socket::Done)
-	{
-		std::cerr << "Failed to initialize bonjour as slave." << std::endl;
-		return false;
-	}
-	*/
-
 	return true;
 }
 
@@ -35,22 +38,6 @@ void SlaveBonjour::Run()
 	threadResponse.launch();
 }
 
-/*
-bool SlaveBonjour::GetMaster(sf::IpAddress &server)
-{
-		if (askSocket.receive(data, BUFFER_SIZE, received, server, port) != sf::Socket::Done)
-		{
-			std::cerr << "Failed to understand bonjour on port " << port << std::endl;
-			return false;
-		}
-		for (std::vector<sf::IpAddress*>::iterator it = serverss.begin() ; it != servers.end(); ++it)
-			if (**it == server) return false;
-		servers.push_back(server);
-		std::cout << "Bonjour process done with " << server << "on port " << port << std::endl;
-		return true;
-}
-*/
-
 void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 {
 	sf::Packet bonjourPacket;
@@ -58,6 +45,8 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 
 	while(1)
 	{
+		socket->canAsk.lock();
+
 		if (socket->askSocket.send(bonjourPacket, sf::IpAddress::Broadcast, socket->askPort) != sf::Socket::Done)
 		{
 			std::cerr << "Failed to send bonjour request." << std::endl;
@@ -66,6 +55,7 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 		{
 			std::cout << "Bonjour broadcasted on port " << socket->askPort << std::endl;
 		}
+		socket->canAsk.unlock();
 
 		sf::sleep(socket->sleepTime);
 	}
@@ -76,8 +66,10 @@ void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
 	sf::IpAddress recvAddress;
 	unsigned short recvPort;
 	sf::Uint8 id;
+	sf::Uint16 masterPort;
+	MasterDesc desc;
 
-std::cout << "waiting..." << std::endl;
+	std::cout << "waiting..." << std::endl;
 
 	while(1)
 	{
@@ -92,10 +84,48 @@ std::cout << "waiting..." << std::endl;
 		if(id != BONJOUR_RESPONSE)
 		{
 			std::cerr << "Received wrong bonjour response." << std::endl;
+			continue;
+		}
+		std::cout << "Received bonjour response from master " << recvAddress<< std::endl;
+
+		packet >> masterPort;
+		desc.address = recvAddress;
+		desc.port = masterPort;
+
+		socket->masters[desc].restart();
+		
+		socket->chooseMasterAndConnect();
+	}
+}
+
+void SlaveBonjour::chooseMasterAndConnect(void)
+{
+	std::map<MasterDesc, sf::Clock>::iterator it;
+
+	// First, erase masters that are "persistence timed out"
+	for(it = masters.begin(); it != masters.end();)
+	{
+		if(it->second.getElapsedTime().asSeconds() > MASTER_PERSISTENCE)
+		{
+			std::map<MasterDesc, sf::Clock>::iterator tmp = it++;
+			masters.erase(tmp);
+		}
+		else
+			++it;
+	}
+
+	// Then, try some masters until it works
+	for(it = masters.begin(); it != masters.end(); ++it)
+	{
+		if(app->ConnectToMaster(it->first.address, it->first.port))
+		{
+			canAsk.lock();
+			std::cout << "Successfully connected to master " << it->first.address << ":" << it->first.port << std::endl;
 		}
 		else
 		{
-			std::cout << "Received bonjour response from a master!" << std::endl;
+			std::cout << "Failed to connect to master " << it->first.address << ":" << it->first.port << std::endl;
 		}
 	}
 }
+

@@ -12,6 +12,7 @@ class ApplicationSlave : public	Application
 		virtual ~ApplicationSlave();
 
 		virtual bool Run(void);
+		bool ConnectToMaster(const sf::IpAddress &address, unsigned short port);
 
 	protected:
 		SlaveBonjour *bonjour;

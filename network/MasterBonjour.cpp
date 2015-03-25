@@ -19,16 +19,25 @@ bool MasterBonjour::Initialize(void)
 		std::cerr << "Failed to initialize bonjour as master." << std::endl;
 		return false;
 	}
+
+	if(listener.listen(sf::Socket::AnyPort) != sf::Socket::Done)
+	{
+		std::cerr << "Failed to setup TCP listener." << std::endl;
+	}
+
+	listenerPort = listener.getLocalPort();
+	std::cout << "TCP listener set on port " << listenerPort << std::endl;
+
 	return true;
 }
 
 void MasterBonjour::Run()
 {
-	sf::Thread thread(&MasterBonjour::authentificationRoutine, this);
+	sf::Thread thread(&MasterBonjour::ackJobRoutine, this);
 	thread.launch();
 }
 
-void MasterBonjour::authentificationRoutine(MasterBonjour *socket)
+void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 {
 	sf::Uint8 id;
 	sf::IpAddress sender;
@@ -47,11 +56,11 @@ void MasterBonjour::authentificationRoutine(MasterBonjour *socket)
 		inPacket >> id;
 		if(id != BONJOUR_ASK_JOB)
 		{
-			std::cerr << "Received wrong bonjour request." << std::endl;
+			std::cerr << "Received wrong bonjour request. (" << (int)id << ")" << std::endl;
 			continue;
 		}
 		
-		outPacket << BONJOUR_RESPONSE;
+		outPacket << BONJOUR_RESPONSE << (sf::Uint16)socket->listenerPort;
 
 		if (socket->bjr.send(outPacket, sender, socket->port) != sf::Socket::Done)
 		{

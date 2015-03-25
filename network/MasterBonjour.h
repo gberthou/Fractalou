@@ -13,10 +13,12 @@ class MasterBonjour
 		void Run(void);
 
 	protected:
-		static void authentificationRoutine(MasterBonjour *socket);
+		static void ackJobRoutine(MasterBonjour *socket);
 
-		sf::UdpSocket bjr;
+		sf::UdpSocket bjr; // Broadcast
+		sf::TcpListener listener; // Gets new connections from slaves
 		unsigned short port;
+		unsigned short listenerPort;
 };
 
 #endif

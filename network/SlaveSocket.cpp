@@ -3,36 +3,32 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-SlaveSocket::SlaveSocket(const sf::IpAddress server, const unsigned short& port)
+SlaveSocket::SlaveSocket(const sf::IpAddress &server, unsigned short port):
+	masterAddress(server),
+	masterPort(port)
 {
-	if (socket.connect(server, port) != sf::Socket::Done)
-	{
-		std::cout << "Error connection to server "<< server << " on port : " << port << std::endl;
-		return;
-	}
-	std::cout << "Connected to server " << server << std::endl;
 }
 
 SlaveSocket::~SlaveSocket()
 {
 }
 
-void SlaveSocket::Run()
+bool SlaveSocket::Initialize(void)
 {
-	while(1)
+	if (socket.connect(masterAddress, masterPort) != sf::Socket::Done)
 	{
-		while(!AskJob());
-
-		std::cout << part.ToString() << std::endl;
-
-		part.ComputeResults();
-
-		std::cout << part.ToString() << std::endl;
-
-		while(!SendData());
+		std::cout << "Error connection to master "<< masterAddress << " on port  " << masterPort << std::endl;
+		return false;
 	}
+	std::cout << "Connected to server " << masterAddress << std::endl;
+	return true;
 }
 
+void SlaveSocket::Run(void)
+{
+}
+
+/*
 bool SlaveSocket::AskJob()
 {
 	const char out[] = "I need dis JOB";
@@ -54,9 +50,11 @@ bool SlaveSocket::AskJob()
 
 	return true;
 }
+*/
 
 bool SlaveSocket::SendData()
 {
+	/*
 	sf::Packet packet;
 	part.SerializeResult(packet);
 
@@ -65,5 +63,6 @@ bool SlaveSocket::SendData()
 		return false;
 	}
 	std::cout << "Sending processed data" << std::endl;
+	*/
 	return true;
 }
