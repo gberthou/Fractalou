@@ -8,7 +8,7 @@ class ApplicationMaster;
 class MasterBonjour
 {
 	public:
-		MasterBonjour(ApplicationMaster *master, unsigned short aport);
+		MasterBonjour(ApplicationMaster *master, unsigned short port, unsigned short listenerPort);
 		virtual ~MasterBonjour();
 
 		bool Initialize(void);
@@ -21,6 +21,7 @@ class MasterBonjour
 		ApplicationMaster *app;
 		sf::UdpSocket bjr; // Broadcast
 		unsigned short port;
+		unsigned short listenerPort;
 };
 
 #endif

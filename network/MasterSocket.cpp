@@ -108,3 +108,9 @@ void MasterSocket::clientRoutine(ClientRoutineParams params)
 		}
 	}
 }
+
+unsigned short MasterSocket::GetListenerPort(void) const
+{
+	return listener.getLocalPort();
+}
+

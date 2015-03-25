@@ -21,12 +21,12 @@ ApplicationMaster::~ApplicationMaster()
 
 bool ApplicationMaster::Run(void)
 {
-	bonjour = new MasterBonjour(this, BONJOUR_ASK_PORT);
-	if(!bonjour->Initialize())
-		return false;
-
 	socket = new MasterSocket(fractal);
 	if(!socket->Initialize())
+		return false;
+
+	bonjour = new MasterBonjour(this, BONJOUR_ASK_PORT, socket->GetListenerPort());
+	if(!bonjour->Initialize())
 		return false;
 
 	bonjour->Run();

@@ -23,6 +23,8 @@ class MasterSocket
 		bool Initialize(void);
 		void Run(void);
 
+		unsigned short GetListenerPort(void) const;
+
 	protected:
 		static void authentificationRoutine(MasterSocket *socket);
 		static void clientRoutine(ClientRoutineParams params); 

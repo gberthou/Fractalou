@@ -4,9 +4,10 @@
 #include "Bonjour.h"
 #include "ApplicationMaster.h"
 
-MasterBonjour::MasterBonjour(ApplicationMaster *application, unsigned short aport):
+MasterBonjour::MasterBonjour(ApplicationMaster *application, unsigned short aport, unsigned short lport):
 	app(application),
-	port(aport)
+	port(aport),
+	listenerPort(lport)
 {
 }
 
@@ -53,7 +54,6 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 			continue;
 		}
 	
-		/*	
 		outPacket << BONJOUR_RESPONSE << (sf::Uint16)socket->listenerPort;
 
 		if (socket->bjr.send(outPacket, sender, socket->port) != sf::Socket::Done)
@@ -64,7 +64,6 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 		{
 			std::cout << "Bonjour process done with " << sender << " on port " << socket->port << std::endl;
 		}
-		*/
 	}
 }
 
