@@ -1,16 +1,25 @@
 #include "MasterSocket.h"
+#include "ApplicationMaster.h"
 
 #include <SFML/System.hpp>
 #include <iostream>
 
-MasterSocket::MasterSocket(Fractal *f):
-	fractal(f)
+MasterSocket::MasterSocket(ApplicationMaster *application,Fractal *f):
+	app(application),
+	fractal(f),
+	threadAuth(0)
 {
 }
 
 MasterSocket::~MasterSocket()
 {
+	std::vector<sf::Thread*>::iterator it;
+	
 	listener.close();
+	
+	for(it = clientThreads.begin(); it != clientThreads.end(); ++it)
+		delete (*it);
+	delete threadAuth;
 }
 
 bool MasterSocket::Initialize(void)
@@ -41,16 +50,22 @@ bool MasterSocket::Initialize(void)
 
 void MasterSocket::Run(void)
 {
-	sf::Thread threadAuth(&MasterSocket::authentificationRoutine, this);
-	threadAuth.launch();
+	threadAuth = new sf::Thread(&MasterSocket::authentificationRoutine, this);
+	threadAuth->launch();
+}
+
+void MasterSocket::WaitForEnd(void)
+{
+	if(threadAuth != 0)
+		threadAuth->wait();
 }
 
 void MasterSocket::authentificationRoutine(MasterSocket *socket)
 {
 	while(1)
 	{
-		sf::TcpSocket client;
-		if (socket->listener.accept(client) != sf::Socket::Done)
+		sf::TcpSocket *client = new sf::TcpSocket();
+		if (socket->listener.accept(*client) != sf::Socket::Done)
 		{
 			std::cerr << "Failed when accepting connection." << std::endl;
 			continue;
@@ -58,53 +73,51 @@ void MasterSocket::authentificationRoutine(MasterSocket *socket)
 		else
 		{
 			ClientRoutineParams params = {socket, client};
-			//socket->clients.push_back(client);
+			sf::Thread *thread = new sf::Thread(&MasterSocket::clientRoutine, params);
+			socket->mtxClients.lock();
+			socket->clientThreads.push_back(thread);
+			socket->mtxClients.unlock();
 			
-			// :/
-			sf::Thread thread(&MasterSocket::clientRoutine, params);
-			thread.launch();
+			thread->launch();
 		}
 	}
 }
 
 void MasterSocket::clientRoutine(ClientRoutineParams params)
 {
-	while(1)
+	sf::Packet inPacket;
+	sf::Packet outPacket;
+	FractalPart *part;
+	
+	params.socket->mtxJob.lock();
+	part = params.socket->jobList->GetPart(); // Get the current job part
+	params.socket->jobList = params.socket->jobList->GetNext(); // Let's rotate the list!
+	params.socket->mtxJob.unlock();
+
+	part->SerializeTask(outPacket);
+
+	sf::Socket::Status st;	
+	if((st = params.client->send(outPacket)) != sf::Socket::Done)
 	{
-		sf::Packet inPacket;
-		sf::Packet outPacket;
-		FractalPart *part;
+		std::cerr << "Error while trying to send data to client." << std::endl;
+		std::cerr << st << std::endl;
+	}
+	else
+	{
+		sf::Packet packetResult;
 		
-		if(params.client.receive(inPacket) != sf::Socket::Done)
+		std::cout << "Data sent to client." << std::endl;
+		if(params.client->receive(packetResult) != sf::Socket::Done)
 		{
 			std::cerr << "Connection lost." << std::endl;
-			return;
-		} 
-
-		part = params.socket->jobList->GetPart(); // Get the current job part
-		part->SerializeTask(outPacket);
-		
-		if(params.client.send(outPacket) != sf::Socket::Done)
-		{
-			std::cerr << "Error while trying to send data to client." << std::endl;
 		}
-		else
+		else 
 		{
-			sf::Packet packetResult;
-			
-			params.socket->jobList = params.socket->jobList->GetNext(); // Let's rotate the list!
-			
-			std::cout << "Data sent to client." << std::endl;
-			if(params.client.receive(packetResult) != sf::Socket::Done)
-			{
-				std::cerr << "Connection lost." << std::endl;
-			}
-			else 
-			{
-				part->DeserializeResult(packetResult);
-				std::cout << "Job finished." << std::endl;
-				std::cout << part->ToString() << std::endl;
-			}
+			part->DeserializeResult(packetResult);
+			std::cout << "Job finished." << std::endl;
+			std::cout << part->ToString() << std::endl;
+
+			params.socket->app->OnPartComplete(part);
 		}
 	}
 }

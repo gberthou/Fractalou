@@ -23,6 +23,7 @@ bool ApplicationSlave::Run(void)
 		return false;
 
 	bonjour->Run();
+	bonjour->WaitForEnd();
 
 	return true;
 }
@@ -33,6 +34,7 @@ bool ApplicationSlave::ConnectToMaster(const sf::IpAddress &address, unsigned sh
 	if(!socket->Initialize())
 		return false;
 	socket->Run();
+	socket->WaitForEnd();
 	return true;
 }
 

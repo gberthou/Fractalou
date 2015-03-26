@@ -21,7 +21,7 @@ ApplicationMaster::~ApplicationMaster()
 
 bool ApplicationMaster::Run(void)
 {
-	socket = new MasterSocket(fractal);
+	socket = new MasterSocket(this, fractal);
 	if(!socket->Initialize())
 		return false;
 
@@ -31,6 +31,9 @@ bool ApplicationMaster::Run(void)
 
 	bonjour->Run();
 	socket->Run();
+
+	bonjour->WaitForEnd();
+	socket->WaitForEnd();
 
 	return true;
 }

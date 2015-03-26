@@ -13,6 +13,7 @@ class MasterBonjour
 
 		bool Initialize(void);
 		void Run(void);
+		void WaitForEnd(void);
 
 	protected:
 		// Routine that waits for job requests and responds to them
@@ -22,6 +23,9 @@ class MasterBonjour
 		sf::UdpSocket bjr; // Broadcast
 		unsigned short port;
 		unsigned short listenerPort;
+
+		// Synchronization
+		sf::Thread *threadAck;
 };
 
 #endif

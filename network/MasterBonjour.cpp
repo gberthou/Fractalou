@@ -7,12 +7,14 @@
 MasterBonjour::MasterBonjour(ApplicationMaster *application, unsigned short aport, unsigned short lport):
 	app(application),
 	port(aport),
-	listenerPort(lport)
+	listenerPort(lport),
+	threadAck(0)
 {
 }
 
 MasterBonjour::~MasterBonjour()
-{	
+{
+	delete threadAck;	
 }
 
 bool MasterBonjour::Initialize(void)
@@ -27,8 +29,14 @@ bool MasterBonjour::Initialize(void)
 
 void MasterBonjour::Run()
 {
-	sf::Thread threadAck(&MasterBonjour::ackJobRoutine, this);
-	threadAck.launch();
+	threadAck = new sf::Thread(&MasterBonjour::ackJobRoutine, this);
+	threadAck->launch();
+}
+
+void MasterBonjour::WaitForEnd(void)
+{
+	if(threadAck != 0)
+		threadAck->wait();
 }
 
 void MasterBonjour::ackJobRoutine(MasterBonjour *socket)

@@ -18,7 +18,8 @@ class SlaveBonjour
 
 		bool Initialize(void);
 		void Run(void);
-		
+		void WaitForEnd(void);
+
 	protected:
 		// Routine that asks for a job
 		static void askJobRoutine(SlaveBonjour *socket);
@@ -40,6 +41,8 @@ class SlaveBonjour
 		sf::Time sleepTime;
 
 		// Synchronization
+		sf::Thread *threadAsk;
+		sf::Thread *threadResponse;
 		sf::Mutex canAsk;
 };
 

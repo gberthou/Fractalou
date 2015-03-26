@@ -10,6 +10,9 @@ class ApplicationMasterWindow : public ApplicationMaster
 		virtual ~ApplicationMasterWindow();
 
 		virtual bool Run(void);
+		virtual void OnPartComplete(FractalPart *part);
+	
+	protected:
 };
 
 #endif

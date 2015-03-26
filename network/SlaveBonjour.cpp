@@ -9,12 +9,16 @@ const float MASTER_PERSISTENCE = 20; // seconds
 SlaveBonjour::SlaveBonjour(ApplicationSlave *application, unsigned short aport, sf::Time asleep):
 	app(application),
 	askPort(aport),
-	sleepTime(asleep)
+	sleepTime(asleep),
+	threadAsk(0),
+	threadResponse(0)
 {
 }
 
 SlaveBonjour::~SlaveBonjour()
 {
+	delete threadAsk;
+	delete threadResponse;
 }
 
 bool SlaveBonjour::Initialize(void)
@@ -24,11 +28,17 @@ bool SlaveBonjour::Initialize(void)
 
 void SlaveBonjour::Run()
 {
-	sf::Thread threadAsk(&SlaveBonjour::askJobRoutine, this);
-	sf::Thread threadResponse(&SlaveBonjour::responseRoutine, this);
+	threadAsk = new sf::Thread(&SlaveBonjour::askJobRoutine, this);
+	threadResponse = new sf::Thread(&SlaveBonjour::responseRoutine, this);
 	
-	threadAsk.launch();
-	threadResponse.launch();
+	threadAsk->launch();
+	threadResponse->launch();
+}
+
+void SlaveBonjour::WaitForEnd(void)
+{
+	threadAsk->wait();
+	threadResponse->wait();
 }
 
 void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
@@ -62,8 +72,6 @@ void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
 	sf::Uint16 masterPort;
 	MachineDesc desc;
 
-	std::cout << "waiting..." << std::endl;
-
 	while(1)
 	{
 		sf::Packet packet;
@@ -96,6 +104,7 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 	std::map<MachineDesc, sf::Clock>::iterator it;
 
 	// First, erase masters that are "persistence timed out"
+	/*
 	for(it = masters.begin(); it != masters.end();)
 	{
 		if(it->second.getElapsedTime().asSeconds() > MASTER_PERSISTENCE)
@@ -106,19 +115,19 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 		else
 			++it;
 	}
+	*/
 
 	// Then, try some masters until it works
 	for(it = masters.begin(); it != masters.end(); ++it)
 	{
+		canAsk.lock();
 		if(app->ConnectToMaster(it->first.address, it->first.port))
 		{
-			canAsk.lock();
-			std::cout << "Successfully connected to master " << it->first.address << ":" << it->first.port << std::endl;
 		}
 		else
 		{
-			std::cout << "Failed to connect to master " << it->first.address << ":" << it->first.port << std::endl;
 		}
+		canAsk.unlock();
 	}
 }
 

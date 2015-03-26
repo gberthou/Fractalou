@@ -97,3 +97,9 @@ bool ApplicationMasterWindow::Run(void)
 	return true;
 }
 
+void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
+{
+	// Put here some code to be called when the given part is complete
+	std::cout << "PART COMPLETE!" << std::endl;
+}
+

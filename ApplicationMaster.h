@@ -15,8 +15,8 @@ class ApplicationMaster : public Application
 		virtual ~ApplicationMaster();
 
 		virtual bool Run(void);
-		//void AddSlave(sf::TcpSocket &client);
-
+		virtual void OnPartComplete(FractalPart *part) = 0;
+	
 	protected:
 		void setFractal(Fractal *fractal);
 

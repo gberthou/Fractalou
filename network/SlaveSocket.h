@@ -11,17 +11,19 @@ class SlaveSocket
 		SlaveSocket(const sf::IpAddress &server, unsigned short port);
 		virtual ~SlaveSocket();
 		
-		void Run(void);
 		bool Initialize(void);
+		void Run(void);
+		void WaitForEnd(void);
 
 	protected:
+		static void computeRoutine(SlaveSocket *socket);
+
 		sf::IpAddress masterAddress;
 		unsigned short masterPort;	
-		sf::TcpSocket socket;
+		sf::TcpSocket *socket;
 
-		FractalPart part;
-
-		bool SendData();
+		// Synchronization
+		sf::Thread *threadCompute;
 };
 
 #endif
