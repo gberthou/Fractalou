@@ -1,6 +1,8 @@
 #ifndef APPLICATION_MASTER_WINDOW_H
 #define APPLICATION_MASTER_WINDOW_H
 
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 
 #include "ApplicationMaster.h"
@@ -17,8 +19,10 @@ class ApplicationMasterWindow : public ApplicationMaster
 		virtual void OnPartComplete(FractalPart *part);
 	
 	protected:
+		std::vector<FractalPart*> partsToUpdate;
+
 		// Synchronization
-		sf::Mutex mtxView;
+		sf::Mutex mtxUpdate;
 
 		// Visualization
 		sf::RenderWindow window;

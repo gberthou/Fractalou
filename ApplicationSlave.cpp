@@ -17,7 +17,7 @@ ApplicationSlave::~ApplicationSlave()
 
 bool ApplicationSlave::Run(void)
 {
-	const sf::Time BONJOUR_SLEEP_TIME = sf::seconds(2);
+	const sf::Time BONJOUR_SLEEP_TIME = sf::milliseconds(20);
 	bonjour = new SlaveBonjour(this, BONJOUR_ASK_PORT, BONJOUR_SLEEP_TIME);
 	if(!bonjour->Initialize())
 		return false;

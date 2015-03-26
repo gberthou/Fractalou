@@ -86,6 +86,7 @@ ApplicationMasterWindow::~ApplicationMasterWindow()
 bool ApplicationMasterWindow::Run(void)
 {
 	double zoom = 500.;
+	std::vector<FractalPart*>::const_iterator it;
 
 	fractal = buildJuliaFractal(zoom);
 	
@@ -138,6 +139,17 @@ bool ApplicationMasterWindow::Run(void)
 
 		view->Display();
 		window.display();
+
+		mtxUpdate.lock();
+		if(partsToUpdate.size() != 0)
+		{
+			for(it = partsToUpdate.begin(); it != partsToUpdate.end(); ++it)
+			{
+				view->UpdatePart(*it);
+			}
+			partsToUpdate.clear();
+		}		
+		mtxUpdate.unlock();
 	}
 
 	ApplicationMaster::WaitForEnd();
@@ -150,8 +162,8 @@ void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 	// Put here some code to be called when the given part is complete
 	std::cout << "PART COMPLETE!" << std::endl;
 
-	mtxView.lock();
-	view->UpdatePart(part);
-	mtxView.unlock();
+	mtxUpdate.lock();
+	partsToUpdate.push_back(part);
+	mtxUpdate.unlock();
 }
 
