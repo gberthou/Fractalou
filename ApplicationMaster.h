@@ -14,17 +14,18 @@ class ApplicationMaster : public Application
 		ApplicationMaster();
 		virtual ~ApplicationMaster();
 
-		virtual bool Run(void);
+		virtual bool Run(bool blocking);
 		virtual void OnPartComplete(FractalPart *part) = 0;
 	
 	protected:
-		void setFractal(Fractal *fractal);
+		void WaitForEnd(void);
+
+		Fractal *fractal;
 
 	private:	
 		MasterBonjour *bonjour;
 		MasterSocket *socket;
 
-		Fractal *fractal;
 };
 
 #endif

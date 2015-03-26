@@ -61,3 +61,20 @@ void FractalViewWindow::BuildImage(void)
 	texture.update(pixels);
 }
 
+void FractalViewWindow::UpdatePart(FractalPart *part)
+{
+	ResultCollection result = part->GetResults();
+	ResultCollection::const_iterator it;
+
+	for(it = result.begin(); it != result.end(); ++it)
+	{
+		sf::Uint32 id = it->first;
+		double a = it->second;
+		
+		Colors::GetColor(a,&pixels[4*id],&pixels[4*id+1],&pixels[4*id+2]);
+		pixels[4*id+3] = 255;
+	}
+
+	texture.update(pixels);
+}
+

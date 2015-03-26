@@ -64,36 +64,84 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 	{
 		return 0;
 	}
-
-	std::cout << "Building image..." << std::endl;
-	view->BuildImage();
-	std::cout << "Image built!" << std::endl;
+	view->Initialize();
 
 	return view;
 }
 
-ApplicationMasterWindow::ApplicationMasterWindow()
+ApplicationMasterWindow::ApplicationMasterWindow():
+	window(sf::VideoMode(WINDOW_W,WINDOW_H), "Fractalou", sf::Style::Default),
+	view(0)
 {
+	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(60);
 }
 
 ApplicationMasterWindow::~ApplicationMasterWindow()
 {
+	if(view != 0)
+		delete view;
 }
 
 bool ApplicationMasterWindow::Run(void)
 {
-	Fractal *frac;
 	double zoom = 500.;
 
-	frac = buildJuliaFractal(zoom);
+	fractal = buildJuliaFractal(zoom);
+	
+	window.clear();
+	window.display();
+	window.setActive(false);
 
-	setFractal(frac);
-
-	if(!ApplicationMaster::Run())
+	if(!ApplicationMaster::Run(false))
 		return false;
 
-	delete frac;
+	view = testJuliaLocalWindowed(&window, fractal);
 
+	while(window.isOpen())
+	{
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch( event.type )
+            {
+				case sf::Event::KeyPressed:
+					if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+					{
+						window.close();
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+					{
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+							zoom*=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+							zoom/=2.;
+
+						/*
+						delete view;
+						view = testJuliaLocalWindowed(&window, zoom);
+
+						window.clear();
+						view->Display();
+						window.display();
+						*/
+					}
+					break;
+				case sf::Event::Closed:
+					window.close();
+					break;
+				default:
+					break;
+            }
+        }
+
+		view->Display();
+		window.display();
+	}
+
+	ApplicationMaster::WaitForEnd();
+	
 	return true;
 }
 
@@ -101,5 +149,9 @@ void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 {
 	// Put here some code to be called when the given part is complete
 	std::cout << "PART COMPLETE!" << std::endl;
+
+	mtxView.lock();
+	view->UpdatePart(part);
+	mtxView.unlock();
 }
 

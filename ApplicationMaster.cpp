@@ -6,6 +6,7 @@
 #include "Bonjour.h"
 
 ApplicationMaster::ApplicationMaster():
+	fractal(0),
 	bonjour(0),
 	socket(0)
 {
@@ -13,13 +14,15 @@ ApplicationMaster::ApplicationMaster():
 
 ApplicationMaster::~ApplicationMaster()
 {
+	if(fractal != 0)
+		delete fractal;
 	if(bonjour != 0)
 		delete bonjour;
 	if(socket != 0)
 		delete socket;
 }
 
-bool ApplicationMaster::Run(void)
+bool ApplicationMaster::Run(bool blocking)
 {
 	socket = new MasterSocket(this, fractal);
 	if(!socket->Initialize())
@@ -32,14 +35,20 @@ bool ApplicationMaster::Run(void)
 	bonjour->Run();
 	socket->Run();
 
-	bonjour->WaitForEnd();
-	socket->WaitForEnd();
+	if(blocking)
+	{
+		bonjour->WaitForEnd();
+		socket->WaitForEnd();
+	}
 
 	return true;
 }
 
-void ApplicationMaster::setFractal(Fractal *f)
+void ApplicationMaster::WaitForEnd(void)
 {
-	fractal = f;
+	if(bonjour != 0)
+		bonjour->WaitForEnd();
+	if(socket != 0)
+		socket->WaitForEnd();
 }
 
