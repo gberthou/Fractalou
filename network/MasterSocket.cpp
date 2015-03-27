@@ -64,19 +64,15 @@ void MasterSocket::CheckThreads(void)
 {
 	std::vector<ClientThread*>::iterator it;
 	mtxClients.lock();
-	std::cout << clientThreads.size() << " threads" << std::endl;
 	for(it = clientThreads.begin(); it != clientThreads.end();)
 	{
 		if((*it)->done)
 		{
 			std::vector<ClientThread*>::iterator tmp = it;
-			std::cout << "Client thread done -> delete" << std::endl;
-		
 			delete (*it)->thread;
 			delete (*it)->socket;
 			delete (*it);
 			it = clientThreads.erase(tmp);
-			std::cout << "DELETE DONE!" << std::endl;
 		}
 		else
 			++it;
@@ -162,7 +158,8 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 				params->socket->app->OnPartComplete(part);
 				
 				params->socket->mtxJob.lock();
-				delete jobList;
+				if(jobList != 0 && !JobList::empty)
+					delete jobList;
 				params->socket->mtxJob.unlock();
 			}
 		}
@@ -170,7 +167,11 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 		params->ct->socket->disconnect();
 		params->ct->done = true;
 		params->socket->mtxClients.unlock();
-		std::cout << "THREAD DONE!" << std::endl;
+	}
+	else
+	{
+		params->socket->jobList = 0;
+		params->socket->mtxJob.unlock();
 	}
 }
 
