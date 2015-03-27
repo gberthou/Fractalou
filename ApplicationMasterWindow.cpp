@@ -92,7 +92,7 @@ bool ApplicationMasterWindow::Run(void)
 	
 	window.clear();
 	window.display();
-	window.setActive(false);
+	//window.setActive(false);
 
 	if(!ApplicationMaster::Run(false))
 		return false;
@@ -160,7 +160,6 @@ bool ApplicationMasterWindow::Run(void)
 void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 {
 	// Put here some code to be called when the given part is complete
-	std::cout << "PART COMPLETE!" << std::endl;
 
 	mtxUpdate.lock();
 	partsToUpdate.push_back(part);
