@@ -15,9 +15,20 @@ JobList::JobList(JobList *parent, FractalPart *p):
 JobList::~JobList()
 {
 	// Destructor: erases the job from the list (doesn't delete the FractalPart)
+	JobList *current;
 	JobList *prev;
-	for(prev = this->next; prev != this; prev = prev->next); // O(list.size)
-	prev->next = next;
+
+	if(this->next != next) //if list doesn't have only one job
+	{
+		prev = this;
+		while(current != this) // O(list.size)
+		{
+			prev = current;
+			current = current->next;
+		}
+
+		prev->next = next;
+	}
 }
 
 FractalPart *JobList::GetPart(void) const
@@ -29,4 +40,3 @@ JobList *JobList::GetNext(void) const
 {
 	return next;
 }
-

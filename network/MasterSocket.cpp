@@ -126,10 +126,12 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 	sf::Packet inPacket;
 	sf::Packet outPacket;
 	FractalPart *part;
+	JobList* jobList;
 	
 	params->socket->mtxJob.lock();
-	part = params->socket->jobList->GetPart(); // Get the current job part
-	params->socket->jobList = params->socket->jobList->GetNext(); // Let's rotate the list!
+	jobList = params->socket->jobList; //Get the job list
+	part = jobList->GetPart(); // Get the current job part
+	params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
 	params->socket->mtxJob.unlock();
 
 	part->SerializeTask(outPacket);
@@ -156,6 +158,10 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 			std::cout << part->ToString() << std::endl;
 
 			params->socket->app->OnPartComplete(part);
+			
+			params->socket->mtxJob.lock();
+			delete jobList;
+			params->socket->mtxJob.unlock();
 		}
 	}
 	params->socket->mtxClients.lock();
