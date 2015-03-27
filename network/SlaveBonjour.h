@@ -38,7 +38,9 @@ class SlaveBonjour
 		std::map<MachineDesc, sf::Clock> masters;
 		unsigned short askPort;
 		unsigned short responsePort;
-		sf::Time sleepTime;
+		sf::Time bonjourSleep;
+		sf::Time jobSleep;
+		bool hadJob;
 
 		// Synchronization
 		sf::Thread *threadAsk;

@@ -9,7 +9,8 @@ const float MASTER_PERSISTENCE = 20; // seconds
 SlaveBonjour::SlaveBonjour(ApplicationSlave *application, unsigned short aport, sf::Time asleep):
 	app(application),
 	askPort(aport),
-	sleepTime(asleep),
+	bonjourSleep(asleep),
+	hadJob(false),
 	threadAsk(0),
 	threadResponse(0)
 {
@@ -59,8 +60,9 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 			std::cout << "Bonjour broadcasted on port " << socket->askPort << std::endl;
 		}
 		socket->canAsk.unlock();
-
-		sf::sleep(socket->sleepTime);
+		if(!socket->hadJob)
+			sf::sleep(socket->bonjourSleep);
+		socket->hadJob = false;
 	}
 }
 
@@ -104,7 +106,6 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 	std::map<MachineDesc, sf::Clock>::iterator it;
 
 	// First, erase masters that are "persistence timed out"
-	/*
 	for(it = masters.begin(); it != masters.end();)
 	{
 		if(it->second.getElapsedTime().asSeconds() > MASTER_PERSISTENCE)
@@ -115,7 +116,6 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 		else
 			++it;
 	}
-	*/
 
 	// Then, try some masters until it works
 	for(it = masters.begin(); it != masters.end(); ++it)
@@ -123,6 +123,7 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 		canAsk.lock();
 		if(app->ConnectToMaster(it->first.address, it->first.port))
 		{
+			hadJob = true;
 		}
 		else
 		{
