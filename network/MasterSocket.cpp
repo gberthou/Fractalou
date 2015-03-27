@@ -130,45 +130,48 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 	
 	params->socket->mtxJob.lock();
 	jobList = params->socket->jobList; //Get the job list
-	part = jobList->GetPart(); // Get the current job part
-	params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
-	params->socket->mtxJob.unlock();
-
-	part->SerializeTask(outPacket);
-
-	if((st = params->ct->socket->send(outPacket)) != sf::Socket::Done)
+	if(!JobList::empty)
 	{
-		std::cerr << "Error while trying to send data to client." << std::endl;
-		std::cerr << st << std::endl;
-	}
-	else
-	{
-		sf::Packet packetResult;
-		
-		std::cout << "Data sent to client." << std::endl;
-		if(params->ct->socket->receive(packetResult) != sf::Socket::Done)
-		{
-			std::cerr << "Connection lost." << std::endl;
-		}
-		else 
-		{
-			part->DeserializeResult(packetResult);
-			
-			std::cout << "Job finished." << std::endl;
-			std::cout << part->ToString() << std::endl;
+		part = jobList->GetPart(); // Get the current job part
+		params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
+		params->socket->mtxJob.unlock();
 
-			params->socket->app->OnPartComplete(part);
-			
-			params->socket->mtxJob.lock();
-			delete jobList;
-			params->socket->mtxJob.unlock();
+		part->SerializeTask(outPacket);
+
+		if((st = params->ct->socket->send(outPacket)) != sf::Socket::Done)
+		{
+			std::cerr << "Error while trying to send data to client." << std::endl;
+			std::cerr << st << std::endl;
 		}
+		else
+		{
+			sf::Packet packetResult;
+			
+			std::cout << "Data sent to client." << std::endl;
+			if(params->ct->socket->receive(packetResult) != sf::Socket::Done)
+			{
+				std::cerr << "Connection lost." << std::endl;
+			}
+			else 
+			{
+				part->DeserializeResult(packetResult);
+				
+				std::cout << "Job finished." << std::endl;
+				std::cout << part->ToString() << std::endl;
+
+				params->socket->app->OnPartComplete(part);
+				
+				params->socket->mtxJob.lock();
+				delete jobList;
+				params->socket->mtxJob.unlock();
+			}
+		}
+		params->socket->mtxClients.lock();
+		params->ct->socket->disconnect();
+		params->ct->done = true;
+		params->socket->mtxClients.unlock();
+		std::cout << "THREAD DONE!" << std::endl;
 	}
-	params->socket->mtxClients.lock();
-	params->ct->socket->disconnect();
-	params->ct->done = true;
-	params->socket->mtxClients.unlock();
-	std::cout << "THREAD DONE!" << std::endl;
 }
 
 unsigned short MasterSocket::GetListenerPort(void) const
