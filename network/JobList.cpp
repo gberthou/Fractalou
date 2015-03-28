@@ -1,8 +1,12 @@
 #include "JobList.h"
 
+bool JobList::empty = false;
+
 JobList::JobList(JobList *parent, FractalPart *p):
 	part(p)
 {
+	empty = false;
+	
 	if(parent != 0) // Insert
 	{
 		next = parent->next;
@@ -15,9 +19,26 @@ JobList::JobList(JobList *parent, FractalPart *p):
 JobList::~JobList()
 {
 	// Destructor: erases the job from the list (doesn't delete the FractalPart)
+	JobList *current;
 	JobList *prev;
-	for(prev = this->next; prev != this; prev = prev->next); // O(list.size)
-	prev->next = next;
+	
+	prev = this;
+	current = next;
+	
+	if(this->next != this) //if list doesn't have only one job
+	{
+		while(current != this) // O(list.size)
+		{
+			prev = current;
+			current = current->next;
+		}
+
+		prev->next = next;
+	}
+	else
+	{
+		empty = true;
+	}
 }
 
 FractalPart *JobList::GetPart(void) const
@@ -29,4 +50,3 @@ JobList *JobList::GetNext(void) const
 {
 	return next;
 }
-

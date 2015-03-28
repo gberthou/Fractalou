@@ -8,10 +8,17 @@
 
 class MasterSocket;
 
+struct ClientThread
+{
+	sf::Thread *thread;
+	sf::TcpSocket *socket;
+	bool done;
+};
+
 struct ClientRoutineParams
 {
 	MasterSocket *socket;
-	sf::TcpSocket *client;
+	ClientThread *ct;
 };
 
 class ApplicationMaster;
@@ -25,12 +32,16 @@ class MasterSocket
 		bool Initialize(void);
 		void Run(void);
 		void WaitForEnd(void);
+
+		void CheckThreads(void);
+
+		void UpdateJobList(Fractal*);
 		
 		unsigned short GetListenerPort(void) const;
 
 	protected:
 		static void authentificationRoutine(MasterSocket *socket);
-		static void clientRoutine(ClientRoutineParams params); 
+		static void clientRoutine(ClientRoutineParams *params); 
 
 		ApplicationMaster *app;
 
@@ -42,7 +53,7 @@ class MasterSocket
 
 		// Synchronization
 		sf::Thread *threadAuth;
-		std::vector<sf::Thread*> clientThreads;
+		std::vector<ClientThread*> clientThreads;
 		sf::Mutex mtxJob;
 		sf::Mutex mtxClients;
 };

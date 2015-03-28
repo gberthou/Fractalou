@@ -92,7 +92,7 @@ bool ApplicationMasterWindow::Run(void)
 	
 	window.clear();
 	window.display();
-	window.setActive(false);
+	//window.setActive(false);
 
 	if(!ApplicationMaster::Run(false))
 		return false;
@@ -115,15 +115,17 @@ bool ApplicationMasterWindow::Run(void)
 							   || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 					{
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-							zoom*=200.;
+							zoom*=2.;
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-							zoom/=200.;
+							zoom/=2.;
 
 						FractalViewWindow* oldView = view;
 						
 						fractal = buildJuliaFractal(zoom);
 						view = testJuliaLocalWindowed(&window, fractal);
 						delete oldView;
+
+						socket->UpdateJobList(fractal);
 
 						window.clear();
 					}
@@ -159,7 +161,6 @@ bool ApplicationMasterWindow::Run(void)
 void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 {
 	// Put here some code to be called when the given part is complete
-	std::cout << "PART COMPLETE!" << std::endl;
 
 	mtxUpdate.lock();
 	partsToUpdate.push_back(part);

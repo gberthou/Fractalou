@@ -21,10 +21,9 @@ class ApplicationMaster : public Application
 		void WaitForEnd(void);
 
 		Fractal *fractal;
-
+		MasterSocket *socket;
 	private:	
 		MasterBonjour *bonjour;
-		MasterSocket *socket;
 
 };
 
