@@ -44,7 +44,6 @@ class SlaveBonjour
 
 		// Synchronization
 		sf::Thread *threadAsk;
-		sf::Thread *threadResponse;
 		sf::Mutex canAsk;
 };
 
