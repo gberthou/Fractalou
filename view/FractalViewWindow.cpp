@@ -31,9 +31,9 @@ bool FractalViewWindow::Initialize(void)
 	if(res)
 	{
 		pixels = new sf::Uint8[width * height * 4];
-		for(unsigned int i = width * height * 4; i != 0; pixels[--i] = 0);
-		
-		texture.setSmooth(true);
+		for(unsigned int i = width * height * 4; i != 0; pixels[--i] = 0xFF);
+		texture.update(pixels);
+
 		sprite.setTexture(texture);
 	}
 	return res;
@@ -56,8 +56,6 @@ void FractalViewWindow::BuildImage(void)
 		Colors::GetColor(a,&pixels[4*id],&pixels[4*id+1],&pixels[4*id+2]);
 		pixels[4*id+3] = 255;
 	}
-
-    std::cout << "done" << std::endl;
 
 	texture.update(pixels);
 }

@@ -92,13 +92,8 @@ bool ApplicationMasterWindow::Run(bool)
 	};
 	std::vector<FractalPart*>::const_iterator it;
 
-
 	fractal = buildJuliaFractal(fractalId, &context);
 	view = testJuliaLocalWindowed(&window, fractal);
-
-	window.clear();
-	view->Display();
-	window.display();
 
 	if(!ApplicationMaster::Run(false))
 		return false;
