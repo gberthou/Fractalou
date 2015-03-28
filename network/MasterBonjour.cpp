@@ -70,7 +70,7 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 		}
 		else
 		{
-			std::cout << "Bonjour process done with " << sender << " on port " << socket->port << std::endl;
+			//std::cout << "Bonjour process done with " << sender << " on port " << socket->port << std::endl;
 		}
 	}
 }

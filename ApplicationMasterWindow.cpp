@@ -111,22 +111,21 @@ bool ApplicationMasterWindow::Run(void)
 					{
 						window.close();
 					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)
-							   || sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 					{
-						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
-							zoom*=2.;
-						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-							zoom/=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+							zoom*=200.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+							zoom/=200.;
 
-						/*
-						delete view;
-						view = testJuliaLocalWindowed(&window, zoom);
+						FractalViewWindow* oldView = view;
+						
+						fractal = buildJuliaFractal(zoom);
+						view = testJuliaLocalWindowed(&window, fractal);
+						delete oldView;
 
 						window.clear();
-						view->Display();
-						window.display();
-						*/
 					}
 					break;
 				case sf::Event::Closed:

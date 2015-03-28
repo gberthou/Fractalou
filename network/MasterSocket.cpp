@@ -106,7 +106,7 @@ void MasterSocket::clientRoutine(ClientRoutineParams params)
 	{
 		sf::Packet packetResult;
 		
-		std::cout << "Data sent to client." << std::endl;
+		//std::cout << "Data sent to client." << std::endl;
 		if(params.client->receive(packetResult) != sf::Socket::Done)
 		{
 			std::cerr << "Connection lost." << std::endl;
@@ -114,8 +114,8 @@ void MasterSocket::clientRoutine(ClientRoutineParams params)
 		else 
 		{
 			part->DeserializeResult(packetResult);
-			std::cout << "Job finished." << std::endl;
-			std::cout << part->ToString() << std::endl;
+			//std::cout << "Job finished." << std::endl;
+			//std::cout << part->ToString() << std::endl;
 
 			params.socket->app->OnPartComplete(part);
 		}
