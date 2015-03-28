@@ -46,7 +46,6 @@ class MasterSocket
 		ApplicationMaster *app;
 
 		sf::TcpListener listener;
-		//std::vector<sf::TcpSocket> clients;
 		unsigned short port;
 		Fractal *fractal;
 		JobList *jobList;

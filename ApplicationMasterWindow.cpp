@@ -62,7 +62,6 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 	{
 		return 0;
 	}
-	view->Initialize();
 
 	return view;
 }
@@ -79,6 +78,8 @@ ApplicationMasterWindow::~ApplicationMasterWindow()
 {
 	if(view != 0)
 		delete view;
+	if(fractal != 0)
+		delete fractal;
 }
 
 bool ApplicationMasterWindow::Run(bool)
@@ -93,14 +94,14 @@ bool ApplicationMasterWindow::Run(bool)
 
 
 	fractal = buildJuliaFractal(fractalId, &context);
+	view = testJuliaLocalWindowed(&window, fractal);
 
 	window.clear();
+	view->Display();
 	window.display();
 
 	if(!ApplicationMaster::Run(false))
 		return false;
-
-	view = testJuliaLocalWindowed(&window, fractal);
 
 	while(window.isOpen())
 	{
@@ -122,15 +123,7 @@ bool ApplicationMasterWindow::Run(bool)
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 							context.zoom/=2.;
 
-						FractalViewWindow* oldView = view;
-						
-						fractal = buildJuliaFractal(++fractalId, &context);
-						view = testJuliaLocalWindowed(&window, fractal);
-						delete oldView;
-
-						socket->UpdateJobList(fractal);
-
-						window.clear();
+						replaceFractal(buildJuliaFractal(++fractalId, &context));
 					}
 					break;
 				case sf::Event::Closed:
@@ -168,4 +161,16 @@ void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 	mtxUpdate.lock();
 	partsToUpdate.push_back(part);
 	mtxUpdate.unlock();
+}
+
+void ApplicationMasterWindow::replaceFractal(Fractal *f)
+{
+	delete view;
+	//delete fractal;
+	fractal = f;	
+	view = testJuliaLocalWindowed(&window, fractal);
+
+	socket->UpdateJobList(fractal);
+
+	window.clear();
 }

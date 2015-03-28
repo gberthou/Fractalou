@@ -141,6 +141,7 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 		params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
 		params->socket->mtxJob.unlock();
 
+		outPacket << jobList->GetFractalId();
 		part->SerializeTask(outPacket);
 
 		if((st = params->ct->socket->send(outPacket)) != sf::Socket::Done)
@@ -159,17 +160,25 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 			}
 			else 
 			{
-				part->DeserializeResult(packetResult);
-				
-				std::cout << "Job finished." << std::endl;
-				std::cout << part->ToString() << std::endl;
+				sf::Uint32 slaveFractalId;
+				packetResult >> slaveFractalId;
 
-				params->socket->app->OnPartComplete(part);
-				
-				params->socket->mtxJob.lock();
-				if(jobList != 0 && !JobList::empty)
-					delete jobList;
-				params->socket->mtxJob.unlock();
+				if(slaveFractalId == params->socket->fractal->GetId())
+				{
+					part->DeserializeResult(packetResult);
+					
+					std::cout << "Job finished." << std::endl;
+					std::cout << part->ToString() << std::endl;
+
+					params->socket->app->OnPartComplete(part);
+					
+					params->socket->mtxJob.lock();
+					if(jobList != 0 && !JobList::empty)
+						delete jobList;
+					params->socket->mtxJob.unlock();
+				}
+				else
+					std::cout << "Received result for old fractal..." << std::endl;
 			}
 		}
 		params->socket->mtxClients.lock();

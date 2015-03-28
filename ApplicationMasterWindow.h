@@ -19,6 +19,8 @@ class ApplicationMasterWindow : public ApplicationMaster
 		virtual void OnPartComplete(FractalPart *part);
 	
 	protected:
+		void replaceFractal(Fractal *fractal);
+		
 		std::vector<FractalPart*> partsToUpdate;
 
 		// Synchronization

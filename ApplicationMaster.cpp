@@ -50,8 +50,3 @@ bool ApplicationMaster::Run(bool blocking)
 	return true;
 }
 
-sf::Uint32 ApplicationMaster::GetCurrentFractalId(void) const
-{
-	return fractalId;
-}
-

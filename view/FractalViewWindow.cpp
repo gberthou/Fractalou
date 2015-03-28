@@ -16,7 +16,8 @@ FractalViewWindow::FractalViewWindow(const Fractal *f, sf::RenderWindow *win, un
 
 FractalViewWindow::~FractalViewWindow()
 {
-	delete [] pixels;
+	if(pixels != 0)
+		delete [] pixels;
 }
 
 void FractalViewWindow::Display(void) const

@@ -49,6 +49,7 @@ void SlaveSocket::computeRoutine(SlaveSocket *socket)
 	unsigned int i = 0;
 	sf::Packet outPacket;
 	FractalPart *part = 0;
+	sf::Uint32 fractalId;
 
 	for(i = 0; i < TRY_NUMBER; ++i)
 	{
@@ -61,6 +62,9 @@ void SlaveSocket::computeRoutine(SlaveSocket *socket)
 				std::cerr << "Try n" << (i+2) << "/" << TRY_NUMBER << std::endl;
 			continue;
 		}
+
+		inPacket >> fractalId;
+
 		part = new FractalPart();
 		part->DeserializeTask(inPacket);
 		std::cout << "Job received!" << std::cout;
@@ -74,6 +78,7 @@ void SlaveSocket::computeRoutine(SlaveSocket *socket)
 
 	part->ComputeResults();
 
+	outPacket << fractalId;
 	part->SerializeResult(outPacket);
 	
 	for(i = 0; i < TRY_NUMBER; ++i)
