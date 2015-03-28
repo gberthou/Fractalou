@@ -11,7 +11,9 @@ class ApplicationSlave : public	Application
 		ApplicationSlave();
 		virtual ~ApplicationSlave();
 
-		virtual bool Run(void);
+		virtual bool Run(bool blocking);
+		virtual void WaitForEnd(void);
+
 		bool ConnectToMaster(const sf::IpAddress &address, unsigned short port);
 
 	protected:

@@ -15,11 +15,11 @@ class ApplicationMaster : public Application
 		virtual ~ApplicationMaster();
 
 		virtual bool Run(bool blocking);
+		virtual void WaitForEnd(void);
+		
 		virtual void OnPartComplete(FractalPart *part) = 0;
 	
 	protected:
-		void WaitForEnd(void);
-
 		Fractal *fractal;
 		MasterSocket *socket;
 	private:	

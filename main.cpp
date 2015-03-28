@@ -41,7 +41,7 @@ void testJuliaLocal(void)
 int main(int argc, char **argv)
 {
 	Application *app = Application::GetApplication(argc, argv);
-	app->Run();
+	app->Run(true);
 
 	return 0;
 }

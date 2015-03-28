@@ -7,8 +7,9 @@ class Application
 		Application();
 		virtual ~Application();
 
-		virtual bool Run(void) = 0;
-		
+		virtual bool Run(bool blocking) = 0;
+		virtual void WaitForEnd(void) = 0;
+
 		static Application *GetApplication(int argc, char **argv);
 };
 

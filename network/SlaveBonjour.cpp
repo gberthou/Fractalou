@@ -11,46 +11,47 @@ SlaveBonjour::SlaveBonjour(ApplicationSlave *application, unsigned short aport, 
 	askPort(aport),
 	bonjourSleep(asleep),
 	hadJob(false),
-	threadAsk(0),
-	threadResponse(0)
+	threadAsk(0)
 {
 }
 
 SlaveBonjour::~SlaveBonjour()
 {
 	delete threadAsk;
-	delete threadResponse;
 }
 
 bool SlaveBonjour::Initialize(void)
 {
+	askSocket.setBlocking(false);
 	return true;
 }
 
 void SlaveBonjour::Run()
 {
 	threadAsk = new sf::Thread(&SlaveBonjour::askJobRoutine, this);
-	threadResponse = new sf::Thread(&SlaveBonjour::responseRoutine, this);
-	
 	threadAsk->launch();
-	threadResponse->launch();
 }
 
 void SlaveBonjour::WaitForEnd(void)
 {
 	threadAsk->wait();
-	threadResponse->wait();
 }
 
 void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 {
+	sf::IpAddress recvAddress;
+	unsigned short recvPort;
+	sf::Uint8 id;
+	sf::Uint16 masterPort;
+	MachineDesc desc;
 	sf::Packet bonjourPacket;
+
 	bonjourPacket << BONJOUR_ASK_JOB;
 
 	while(1)
 	{
-		socket->canAsk.lock();
-
+		sf::Packet packet;
+		
 		if (socket->askSocket.send(bonjourPacket, sf::IpAddress::Broadcast, socket->askPort) != sf::Socket::Done)
 		{
 			std::cerr << "Failed to send bonjour request." << std::endl;
@@ -59,27 +60,11 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 		{
 			std::cout << "Bonjour broadcasted on port " << socket->askPort << std::endl;
 		}
-		socket->canAsk.unlock();
-		if(!socket->hadJob)
-			sf::sleep(socket->bonjourSleep);
-		socket->hadJob = false;
-	}
-}
 
-void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
-{
-	sf::IpAddress recvAddress;
-	unsigned short recvPort;
-	sf::Uint8 id;
-	sf::Uint16 masterPort;
-	MachineDesc desc;
-
-	while(1)
-	{
-		sf::Packet packet;
 		if(socket->askSocket.receive(packet, recvAddress, recvPort) != sf::Socket::Done)
 		{
-			std::cerr << "Failed to receive bonjour response." << std::endl;
+			//std::cerr << "Failed to receive bonjour response." << std::endl;
+			sf::sleep(socket->bonjourSleep);
 			continue;
 		}
 
@@ -120,15 +105,12 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 	// Then, try some masters until it works
 	for(it = masters.begin(); it != masters.end(); ++it)
 	{
-		canAsk.lock();
 		if(app->ConnectToMaster(it->first.address, it->first.port))
 		{
-			hadJob = true;
 		}
 		else
 		{
 		}
-		canAsk.unlock();
 	}
 }
 
