@@ -16,6 +16,7 @@ class Quaternion
 		Quaternion operator+(const Quaternion &q) const;
 		Quaternion operator-(const Quaternion &q) const;
 		Quaternion operator*(const Quaternion &q) const;
+		Quaternion operator*(double n) const;
 		Quaternion operator=(Quaternion);
 
 		friend sf::Packet& operator<<(sf::Packet& os, const Quaternion& obj);

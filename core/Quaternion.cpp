@@ -43,6 +43,11 @@ Quaternion Quaternion::operator*(const Quaternion &q) const
 					  x*q.w + y*q.z - z*q.y + w*q.w);
 }
 
+Quaternion Quaternion::operator*(double n) const
+{
+	return Quaternion(x*n, y*n, z*n, w*n);
+}
+
 Quaternion Quaternion::operator=(Quaternion q)
 {
 	this->x = q.x;

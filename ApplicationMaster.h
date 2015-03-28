@@ -8,6 +8,14 @@
 #include "MasterBonjour.h"
 #include "netcommon.h"
 
+struct FractalContext
+{
+	Quaternion center;
+	double zoom;
+	double limit;
+	sf::Uint32 itMax;
+};
+
 class ApplicationMaster : public Application
 {
 	public:
