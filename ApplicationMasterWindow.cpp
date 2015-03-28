@@ -40,7 +40,7 @@ static Fractal *buildJuliaFractal(const FractalContext *context)
         for(unsigned int x = 0; x < WINDOW_W; ++x)
 		{
 			Quaternion z0 = (Quaternion(x-WINDOW_W/2.,y-WINDOW_H/2., 0, 0) - context->center) * (1. / context->zoom);
-			subsuites[i++].push_back(new QS_Julia(id++, z0, C, 100, 100.));
+			subsuites[i++].push_back(new QS_Julia(id++, z0, C, context->itMax, context->limit));
 			
 			if(i >= partNumber)
 				i = 0;
