@@ -15,17 +15,24 @@ ApplicationSlave::~ApplicationSlave()
 		delete socket;
 }
 
-bool ApplicationSlave::Run(void)
+bool ApplicationSlave::Run(bool blocking)
 {
-	const sf::Time BONJOUR_SLEEP_TIME = sf::milliseconds(20);
+	const sf::Time BONJOUR_SLEEP_TIME = sf::seconds(2);
 	bonjour = new SlaveBonjour(this, BONJOUR_ASK_PORT, BONJOUR_SLEEP_TIME);
 	if(!bonjour->Initialize())
 		return false;
 
 	bonjour->Run();
-	bonjour->WaitForEnd();
+	if(blocking)
+		WaitForEnd();
 
 	return true;
+}
+
+void ApplicationSlave::WaitForEnd(void)
+{
+	if(bonjour != 0)
+		bonjour->WaitForEnd();
 }
 
 bool ApplicationSlave::ConnectToMaster(const sf::IpAddress &address, unsigned short port)

@@ -22,6 +22,14 @@ ApplicationMaster::~ApplicationMaster()
 		delete socket;
 }
 
+void ApplicationMaster::WaitForEnd(void)
+{
+	if(bonjour != 0)
+		bonjour->WaitForEnd();
+	if(socket != 0)
+		socket->WaitForEnd();
+}
+
 bool ApplicationMaster::Run(bool blocking)
 {
 	socket = new MasterSocket(this, fractal);
@@ -36,19 +44,9 @@ bool ApplicationMaster::Run(bool blocking)
 	socket->Run();
 
 	if(blocking)
-	{
-		bonjour->WaitForEnd();
-		socket->WaitForEnd();
-	}
+		WaitForEnd();
 
 	return true;
 }
 
-void ApplicationMaster::WaitForEnd(void)
-{
-	if(bonjour != 0)
-		bonjour->WaitForEnd();
-	if(socket != 0)
-		socket->WaitForEnd();
-}
 

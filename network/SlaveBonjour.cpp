@@ -49,6 +49,12 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 
 	while(1)
 	{
+		sf::Time sleepTime(socket->bonjourSleep);
+		if(socket->hadJob)
+			sleepTime = sf::milliseconds(20);
+
+		sf::sleep(sleepTime);
+		
 		socket->canAsk.lock();
 
 		if (socket->askSocket.send(bonjourPacket, sf::IpAddress::Broadcast, socket->askPort) != sf::Socket::Done)
@@ -60,9 +66,6 @@ void SlaveBonjour::askJobRoutine(SlaveBonjour *socket)
 			std::cout << "Bonjour broadcasted on port " << socket->askPort << std::endl;
 		}
 		socket->canAsk.unlock();
-		if(!socket->hadJob)
-			sf::sleep(socket->bonjourSleep);
-		socket->hadJob = false;
 	}
 }
 
@@ -80,6 +83,7 @@ void SlaveBonjour::responseRoutine(SlaveBonjour *socket)
 		if(socket->askSocket.receive(packet, recvAddress, recvPort) != sf::Socket::Done)
 		{
 			std::cerr << "Failed to receive bonjour response." << std::endl;
+			sf::sleep(sf::milliseconds(20));
 			continue;
 		}
 
@@ -117,6 +121,7 @@ void SlaveBonjour::chooseMasterAndConnect(void)
 			++it;
 	}
 
+	hadJob = false;
 	// Then, try some masters until it works
 	for(it = masters.begin(); it != masters.end(); ++it)
 	{

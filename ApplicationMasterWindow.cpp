@@ -83,13 +83,13 @@ ApplicationMasterWindow::~ApplicationMasterWindow()
 		delete view;
 }
 
-bool ApplicationMasterWindow::Run(void)
+bool ApplicationMasterWindow::Run(bool)
 {
 	double zoom = 500.;
 	std::vector<FractalPart*>::const_iterator it;
 
 	fractal = buildJuliaFractal(zoom);
-	
+
 	window.clear();
 	window.display();
 	//window.setActive(false);

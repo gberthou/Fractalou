@@ -15,7 +15,7 @@ class ApplicationMasterWindow : public ApplicationMaster
 		ApplicationMasterWindow();
 		virtual ~ApplicationMasterWindow();
 
-		virtual bool Run(void);
+		virtual bool Run(bool blocking);
 		virtual void OnPartComplete(FractalPart *part);
 	
 	protected:
