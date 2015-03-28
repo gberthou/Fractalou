@@ -6,9 +6,10 @@
 #include "Bonjour.h"
 
 ApplicationMaster::ApplicationMaster():
+	fractalId(0),
 	fractal(0),
-	bonjour(0),
-	socket(0)
+	socket(0),
+	bonjour(0)
 {
 }
 
@@ -49,4 +50,8 @@ bool ApplicationMaster::Run(bool blocking)
 	return true;
 }
 
+sf::Uint32 ApplicationMaster::GetCurrentFractalId(void) const
+{
+	return fractalId;
+}
 

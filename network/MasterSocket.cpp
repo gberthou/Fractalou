@@ -24,8 +24,6 @@ MasterSocket::~MasterSocket()
 
 bool MasterSocket::Initialize(void)
 {
-	FractalPartCollection parts = fractal->GetParts();
-
 	if(listener.listen(sf::Socket::AnyPort) != sf::Socket::Done)
 	{
 		std::cerr << "Failed to initialize master socket." << std::endl;
@@ -34,37 +32,26 @@ bool MasterSocket::Initialize(void)
 
 	std::cout << "TCP listener set on port " << listener.getLocalPort() << std::endl;
 
-	if(parts.size() > 0)
-	{
-		JobList *tmp;
-		jobList = new JobList(0, parts[0]);
-		tmp = jobList;
-		
-		for(unsigned int i = 1; i < parts.size(); ++i)
-		{
-			tmp = new JobList(tmp, parts[i]);
-		}
-	}
+	UpdateJobList(fractal);
 	return true;
 }
 
-void MasterSocket::UpdateJobList(Fractal* f)
+void MasterSocket::UpdateJobList(Fractal *f)
 {
+	const FractalPartCollection &parts = f->GetParts();
+	
 	mtxJob.lock();
-
 	fractal = f;
-
-	FractalPartCollection parts = fractal->GetParts();
 
 	if(parts.size() > 0)
 	{
 		JobList *tmp;
-		jobList = new JobList(0, parts[0]);
+		jobList = new JobList(0, fractal->GetId(), parts[0]);
 		tmp = jobList;
 		
 		for(unsigned int i = 1; i < parts.size(); ++i)
 		{
-			tmp = new JobList(tmp, parts[i]);
+			tmp = new JobList(tmp, fractal->GetId(), parts[i]);
 		}
 	}
 	mtxJob.unlock();

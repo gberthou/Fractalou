@@ -21,7 +21,7 @@ void testJuliaLocal(void)
 
 	sf::Uint32 id = 0;
 	SuiteCollection suites;
-	Fractal fractal;
+	Fractal fractal(0);
 	FractalViewConsole view(&fractal, W, H);
 
 	for(unsigned int y = 0; y < H; ++y)

@@ -35,7 +35,7 @@ class MasterSocket
 
 		void CheckThreads(void);
 
-		void UpdateJobList(Fractal*);
+		void UpdateJobList(Fractal *fractal);
 		
 		unsigned short GetListenerPort(void) const;
 

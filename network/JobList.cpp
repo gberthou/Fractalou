@@ -2,7 +2,8 @@
 
 bool JobList::empty = false;
 
-JobList::JobList(JobList *parent, FractalPart *p):
+JobList::JobList(JobList *parent, sf::Uint32 afractalId, FractalPart *p):
+	fractalId(afractalId),
 	part(p)
 {
 	empty = false;
@@ -39,6 +40,11 @@ JobList::~JobList()
 	{
 		empty = true;
 	}
+}
+
+sf::Uint32 JobList::GetFractalId(void) const
+{
+	return fractalId;
 }
 
 FractalPart *JobList::GetPart(void) const

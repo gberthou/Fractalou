@@ -16,7 +16,7 @@ static unsigned int getPartNumber(unsigned int width, unsigned int height)
 	return 1 + x / MAX_SUITES_PER_PART;
 }
 
-static Fractal *buildJuliaFractal(const FractalContext *context)
+static Fractal *buildJuliaFractal(sf::Uint32 fractalId, const FractalContext *context)
 {
 	//const Quaternion C(-0.835, 0.232, 0, 0);
 	const Quaternion C(-0.756, 0.232, 0, 0); // fractus
@@ -27,7 +27,7 @@ static Fractal *buildJuliaFractal(const FractalContext *context)
 
 	unsigned int partNumber = getPartNumber(WINDOW_W, WINDOW_H);
 	unsigned int i = 0;
-	Fractal *fractal = new Fractal();
+	Fractal *fractal = new Fractal(fractalId);
 	sf::Uint32 id = 0;
 	SuiteCollection *subsuites = new SuiteCollection[partNumber];
 	
@@ -92,7 +92,7 @@ bool ApplicationMasterWindow::Run(bool)
 	std::vector<FractalPart*>::const_iterator it;
 
 
-	fractal = buildJuliaFractal(&context);
+	fractal = buildJuliaFractal(fractalId, &context);
 
 	window.clear();
 	window.display();
@@ -124,7 +124,7 @@ bool ApplicationMasterWindow::Run(bool)
 
 						FractalViewWindow* oldView = view;
 						
-						fractal = buildJuliaFractal(&context);
+						fractal = buildJuliaFractal(++fractalId, &context);
 						view = testJuliaLocalWindowed(&window, fractal);
 						delete oldView;
 

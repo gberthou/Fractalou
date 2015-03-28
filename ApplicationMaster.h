@@ -26,8 +26,11 @@ class ApplicationMaster : public Application
 		virtual void WaitForEnd(void);
 		
 		virtual void OnPartComplete(FractalPart *part) = 0;
-	
+
+		sf::Uint32 GetCurrentFractalId(void) const;
+
 	protected:
+		sf::Uint32 fractalId;
 		Fractal *fractal;
 		MasterSocket *socket;
 	private:	

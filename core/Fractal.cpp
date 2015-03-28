@@ -3,7 +3,8 @@
 #include <sstream>
 #include <iostream>
 
-Fractal::Fractal()
+Fractal::Fractal(sf::Uint32 aid):
+	id(aid)
 {
 }
 
@@ -39,7 +40,13 @@ void Fractal::BuildResult(ResultCollection &result) const
 	}
 }
 
-FractalPartCollection Fractal::GetParts(void) const
+sf::Uint32 Fractal::GetId(void) const
+{
+	return id;
+}
+
+const FractalPartCollection &Fractal::GetParts(void) const
 {
 	return parts;
 }
+
