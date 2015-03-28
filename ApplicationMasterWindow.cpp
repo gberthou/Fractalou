@@ -16,7 +16,7 @@ static unsigned int getPartNumber(unsigned int width, unsigned int height)
 	return 1 + x / MAX_SUITES_PER_PART;
 }
 
-static Fractal *buildJuliaFractal(double zoom)
+static Fractal *buildJuliaFractal(const FractalContext *context)
 {
 	//const Quaternion C(-0.835, 0.232, 0, 0);
 	const Quaternion C(-0.756, 0.232, 0, 0); // fractus
@@ -39,10 +39,8 @@ static Fractal *buildJuliaFractal(double zoom)
 	{
         for(unsigned int x = 0; x < WINDOW_W; ++x)
 		{
-			//Quaternion z0((x-W/2.)/300., (y-H/2.)/300., 0, 0);
-			Quaternion z0((x-WINDOW_W/2.-0.835)/zoom,(y-WINDOW_H/2.+0.232)/zoom, 0, 0);
-			//Quaternion z0((x-W/2.)/(100.*zoom), (y+H/2.)/(100.*zoom), 0, 0);
-			subsuites[i++].push_back(new QS_Julia(id++, z0, C, 100., 100.));
+			Quaternion z0 = (Quaternion(x-WINDOW_W/2.,y-WINDOW_H/2., 0, 0) - context->center) * (1. / context->zoom);
+			subsuites[i++].push_back(new QS_Julia(id++, z0, C, context->itMax, context->limit));
 			
 			if(i >= partNumber)
 				i = 0;
@@ -85,19 +83,24 @@ ApplicationMasterWindow::~ApplicationMasterWindow()
 
 bool ApplicationMasterWindow::Run(bool)
 {
-	double zoom = 500.;
+	FractalContext context = {
+		Quaternion(0, 0, 0, 0),
+		500.,
+		100.,
+		100
+	};
 	std::vector<FractalPart*>::const_iterator it;
 
-	fractal = buildJuliaFractal(zoom);
-	view = testJuliaLocalWindowed(&window, fractal);
+
+	fractal = buildJuliaFractal(&context);
 
 	window.clear();
-	view->Display();
 	window.display();
-	//window.setActive(false);
 
 	if(!ApplicationMaster::Run(false))
 		return false;
+
+	view = testJuliaLocalWindowed(&window, fractal);
 
 	while(window.isOpen())
 	{
@@ -115,13 +118,13 @@ bool ApplicationMasterWindow::Run(bool)
 							   || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 					{
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-							zoom*=2.;
+							context.zoom*=2.;
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-							zoom/=2.;
+							context.zoom/=2.;
 
 						FractalViewWindow* oldView = view;
 						
-						fractal = buildJuliaFractal(zoom);
+						fractal = buildJuliaFractal(&context);
 						view = testJuliaLocalWindowed(&window, fractal);
 						delete oldView;
 
@@ -130,7 +133,6 @@ bool ApplicationMasterWindow::Run(bool)
 						window.clear();
 					}
 					break;
-
 				case sf::Event::Closed:
 					window.close();
 					break;
@@ -167,4 +169,3 @@ void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
 	partsToUpdate.push_back(part);
 	mtxUpdate.unlock();
 }
-
