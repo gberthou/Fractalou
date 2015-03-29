@@ -39,7 +39,7 @@ static Fractal *buildJuliaFractal(sf::Uint32 fractalId, const FractalContext *co
 	{
         for(unsigned int x = 0; x < WINDOW_W; ++x)
 		{
-			Quaternion z0 = (Quaternion(x-WINDOW_W/2.,y-WINDOW_H/2., 0, 0) - context->center) * (1. / context->zoom);
+			Quaternion z0 = Quaternion(x-WINDOW_W/2.,y-WINDOW_H/2., 0, 0) * (1. / context->zoom)  - context->center;
 			subsuites[i++].push_back(new QS_Julia(id++, z0, C, context->itMax, context->limit));
 			
 			if(i >= partNumber)
@@ -133,7 +133,7 @@ bool ApplicationMasterWindow::Run(bool)
 						x = (WINDOW_W/2) - x;
 						y = (WINDOW_H/2) - y;
 
-						Quaternion q(x, y, 0., 0.);
+						Quaternion q(x / context.zoom, y / context.zoom, 0., 0.);
 						context.center = context.center + q;
 
 						replaceFractal(buildJuliaFractal(++fractalId, &context));
