@@ -124,6 +124,21 @@ bool ApplicationMasterWindow::Run(bool)
 				case sf::Event::Closed:
 					window.close();
 					break;
+				case sf::Event::MouseButtonPressed:
+					{
+						double x, y;
+						x = sf::Mouse::getPosition(window).x;
+						y = sf::Mouse::getPosition(window).y;
+
+						x = (WINDOW_W/2) - x;
+						y = (WINDOW_H/2) - y;
+
+						Quaternion q(x, y, 0., 0.);
+						context.center = context.center + q;
+
+						replaceFractal(buildJuliaFractal(++fractalId, &context));
+					}
+					break;
 				default:
 					break;
             }
