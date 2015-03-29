@@ -111,12 +111,24 @@ bool ApplicationMasterWindow::Run(bool)
 						window.close();
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)
-							   || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::S)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::E)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::D)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::R)
+							   || sf::Keyboard::isKeyPressed(sf::Keyboard::F))
 					{
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 							context.zoom*=2.;
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 							context.zoom/=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+							context.limit*=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+							context.limit/=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+							context.itMax*=2.;
+						if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+							context.itMax/=2.;
 
 						replaceFractal(buildJuliaFractal(++fractalId, &context));
 					}
