@@ -19,6 +19,11 @@ class Quaternion
 		Quaternion operator*(double n) const;
 		Quaternion operator=(Quaternion);
 
+		double GetX(void) const;
+		double GetY(void) const;
+		double GetZ(void) const;
+		double GetW(void) const;
+		
 		friend sf::Packet& operator<<(sf::Packet& os, const Quaternion& obj);
 		friend sf::Packet& operator>>(sf::Packet& is, Quaternion& obj);
 

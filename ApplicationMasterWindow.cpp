@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "ApplicationMasterWindow.h"
 
 #include "FractalViewWindow.h"
@@ -95,6 +97,9 @@ bool ApplicationMasterWindow::Run(bool)
 	fractal = buildJuliaFractal(fractalId, &context);
 	view = testJuliaLocalWindowed(&window, fractal);
 
+	if(!font.loadFromFile("font/DejaVuSans.ttf"))
+		return false;
+
 	if(!ApplicationMaster::Run(false))
 		return false;
 
@@ -157,6 +162,7 @@ bool ApplicationMasterWindow::Run(bool)
         }
 
 		view->Display();
+		displayHUD(&context);
 		window.display();
 
 		mtxUpdate.lock();
@@ -196,3 +202,45 @@ void ApplicationMasterWindow::replaceFractal(Fractal *f)
 
 	window.clear();
 }
+
+void ApplicationMasterWindow::displayHUD(const FractalContext *context)
+{
+	const sf::Vector2f HUD_SIZE(300, 100);
+	const sf::Vector2f MARGIN(4, 4);
+	const unsigned int LINE_NUM = 4;
+	const unsigned int FONT_SIZE = 16;
+	const float LINE_SPACE = FONT_SIZE + 8;
+
+	std::ostringstream strCenter;
+	std::ostringstream strZoom;
+	std::ostringstream strLimit;
+	std::ostringstream strIterations;
+	
+	sf::RectangleShape shape(HUD_SIZE);
+	sf::Text txt[LINE_NUM];
+
+	strCenter << "Center: " << context->center.GetX() << (context->center.GetY() >= 0 ? " + " : " - ") << (context->center.GetY() >= 0 ? context->center.GetY() : -context->center.GetY()) << "i";
+
+	strZoom << "Zoom: " << context->zoom;
+	strLimit << "Limit: " << context->limit;
+	strIterations << "It. max: " << context->itMax;
+
+	shape.setFillColor(sf::Color(0, 0, 0, 128));
+
+	txt[0].setString(sf::String(strCenter.str()));
+	txt[1].setString(sf::String(strZoom.str()));
+	txt[2].setString(sf::String(strLimit.str()));
+	txt[3].setString(sf::String(strIterations.str()));
+	
+	window.draw(shape);
+	for(unsigned int i = 0; i < LINE_NUM; ++i)
+	{
+		txt[i].setFont(font);
+		txt[i].setCharacterSize(FONT_SIZE);
+		txt[i].setColor(sf::Color(255, 255, 255, 255));
+		txt[i].setPosition(MARGIN + sf::Vector2f(0, i * LINE_SPACE));
+		window.draw(txt[i]);
+	}
+
+}
+

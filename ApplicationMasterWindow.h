@@ -20,6 +20,7 @@ class ApplicationMasterWindow : public ApplicationMaster
 	
 	protected:
 		void replaceFractal(Fractal *fractal);
+		void displayHUD(const FractalContext *context);
 		
 		std::vector<FractalPart*> partsToUpdate;
 
@@ -28,6 +29,7 @@ class ApplicationMasterWindow : public ApplicationMaster
 
 		// Visualization
 		sf::RenderWindow window;
+		sf::Font font;
 		FractalViewWindow *view;
 };
 

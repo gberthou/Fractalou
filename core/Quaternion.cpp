@@ -57,11 +57,32 @@ Quaternion Quaternion::operator=(Quaternion q)
 	return *this;
 }
 
+double Quaternion::GetX(void) const
+{
+	return x;
+}
+
+double Quaternion::GetY(void) const
+{
+	return y;
+}
+
+double Quaternion::GetZ(void) const
+{
+	return z;
+}
+
+double Quaternion::GetW(void) const
+{
+	return w;
+}
+
 sf::Packet& operator<<(sf::Packet& os, const Quaternion& obj)
 {
 	os << obj.x << obj.y << obj.z << obj.w;	
 	return os;
 }
+
 sf::Packet& operator>>(sf::Packet& is, Quaternion& obj)
 {
 	is >> obj.x >> obj.y >> obj.z >> obj.w;
