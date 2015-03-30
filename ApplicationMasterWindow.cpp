@@ -103,6 +103,8 @@ bool ApplicationMasterWindow::Run(bool)
 	if(!ApplicationMaster::Run(false))
 		return false;
 
+	bonjour->SetJobAvailability(!JobList::empty);
+	
 	while(window.isOpen())
 	{
         sf::Event event;
@@ -213,6 +215,8 @@ void ApplicationMasterWindow::replaceFractal(Fractal *f)
 	view = testJuliaLocalWindowed(&window, fractal);
 
 	socket->UpdateJobList(fractal);
+	bonjour->SetJobAvailability(!JobList::empty);
+
 	UnlockFractal();
 
 	window.clear();

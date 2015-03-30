@@ -8,6 +8,7 @@ MasterBonjour::MasterBonjour(ApplicationMaster *application, unsigned short apor
 	app(application),
 	port(aport),
 	listenerPort(lport),
+	jobAvailability(false),
 	threadAck(0)
 {
 }
@@ -39,6 +40,13 @@ void MasterBonjour::WaitForEnd(void)
 		threadAck->wait();
 }
 
+void MasterBonjour::SetJobAvailability(bool availability)
+{
+	mtxJobAvailability.lock();
+	jobAvailability = availability;
+	mtxJobAvailability.unlock();
+}
+
 void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 {
 	sf::Uint8 id;
@@ -48,7 +56,16 @@ void MasterBonjour::ackJobRoutine(MasterBonjour *socket)
 	{
 		sf::Packet inPacket;
 		sf::Packet outPacket;
-		
+
+		socket->mtxJobAvailability.lock();
+		if(!socket->jobAvailability)
+		{
+			socket->mtxJobAvailability.unlock();
+			sf::sleep(sf::milliseconds(200));
+			continue;
+		}
+		socket->mtxJobAvailability.unlock();
+
 		if (socket->bjr.receive(inPacket, sender, socket->port) != sf::Socket::Done)
 		{
 			std::cerr << "Failed to recognize bonjour request." << std::endl;

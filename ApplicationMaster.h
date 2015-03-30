@@ -30,14 +30,16 @@ class ApplicationMaster : public Application
 		void LockFractal(void);
 		void UnlockFractal(void);
 
+		void SetJobAvailability(bool availability);
+
 	protected:
 		sf::Uint32 fractalId;
 		Fractal *fractal;
+		
 		MasterSocket *socket;
+		MasterBonjour *bonjour;
 	
 	private:	
-		MasterBonjour *bonjour;
-		
 		// Synchronization
 		sf::Mutex mtxFractal;
 };

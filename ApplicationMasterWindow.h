@@ -17,7 +17,7 @@ class ApplicationMasterWindow : public ApplicationMaster
 
 		virtual bool Run(bool blocking);
 		virtual void OnPartComplete(const ResultCollection &results);
-	
+		
 	protected:
 		void replaceFractal(Fractal *fractal);
 		void displayHUD(const FractalContext *context);

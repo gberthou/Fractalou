@@ -15,6 +15,8 @@ class MasterBonjour
 		void Run(void);
 		void WaitForEnd(void);
 
+		void SetJobAvailability(bool availability);
+
 	protected:
 		// Routine that waits for job requests and responds to them
 		static void ackJobRoutine(MasterBonjour *socket);
@@ -23,9 +25,11 @@ class MasterBonjour
 		sf::UdpSocket bjr; // Broadcast
 		unsigned short port;
 		unsigned short listenerPort;
+		bool jobAvailability;
 
 		// Synchronization
 		sf::Thread *threadAck;
+		sf::Mutex mtxJobAvailability;
 };
 
 #endif

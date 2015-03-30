@@ -60,3 +60,8 @@ void ApplicationMaster::UnlockFractal(void)
 	mtxFractal.unlock();
 }
 
+void ApplicationMaster::SetJobAvailability(bool availability)
+{
+	bonjour->SetJobAvailability(availability);
+}
+

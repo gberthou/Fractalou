@@ -14,12 +14,17 @@ class JobList
 		sf::Uint32 GetFractalId(void) const;
 		FractalPart *GetPart(void) const;
 		JobList *GetNext(void) const;
+		
+		static void LockEmpty(void);
+		static void UnlockEmpty(void);
 		static bool empty;
+
 	private:
 		sf::Uint32 fractalId;
 		FractalPart *part;
 		JobList *next;
 
+		static sf::Mutex mtxEmpty;
 };
 
 #endif

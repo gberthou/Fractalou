@@ -50,56 +50,72 @@ void SlaveSocket::computeRoutine(SlaveSocket *socket)
 	sf::Packet outPacket;
 	FractalPart *part = 0;
 	sf::Uint32 fractalId;
+	sf::SocketSelector selector;
+	bool noJob = false;
 
-	for(i = 0; i < TRY_NUMBER; ++i)
+	selector.add(*(socket->socket));
+
+	for(i = 0; i < TRY_NUMBER && !noJob; ++i)
 	{
 		sf::Packet inPacket;
 
-		if(socket->socket->receive(inPacket) != sf::Socket::Done)
+		if(!selector.wait(sf::seconds(2)))
 		{
-			std::cerr << "Cannot receive data from master..." << std::endl;
-			if(i+1 != TRY_NUMBER)
-				std::cerr << "Try n" << (i+2) << "/" << TRY_NUMBER << std::endl;
-			continue;
-		}
-
-		inPacket >> fractalId;
-
-		part = new FractalPart();
-		part->DeserializeTask(inPacket);
-		std::cout << "Job received!" << std::cout;
-		break;
-	}
-	if(i == TRY_NUMBER)
-	{
-		std::cerr << "Too many tries... abort." << std::endl;
-		return;
-	}
-
-	part->ComputeResults();
-
-	outPacket << fractalId;
-	part->SerializeResult(outPacket);
-	
-	for(i = 0; i < TRY_NUMBER; ++i)
-	{
-		if(socket->socket->send(outPacket) != sf::Socket::Done)
-		{
-			std::cerr << "Cannot send data to master..." << std::endl;
-			if(i+1 != TRY_NUMBER)
-				std::cerr << "Try n " << (i+2) << "/" << TRY_NUMBER << std::endl;
+			noJob = true;
 		}
 		else
+		{
+			if(socket->socket->receive(inPacket) != sf::Socket::Done)
+			{
+				std::cerr << "Cannot receive data from master..." << std::endl;
+				if(i+1 != TRY_NUMBER)
+					std::cerr << "Try n" << (i+2) << "/" << TRY_NUMBER << std::endl;
+				continue;
+			}
+
+			inPacket >> fractalId;
+
+			part = new FractalPart();
+			part->DeserializeTask(inPacket);
+			std::cout << "Job received!" << std::cout;
 			break;
-	}
-	delete part;
-	
-	if(i == TRY_NUMBER)
-	{
-		return;
+		}
 	}
 
-	std::cout << "Data sent to master! Job done!" << std::endl;
+	if(noJob)
+	{
+		std::cout << "No job..." << std::endl;
+	}
+	else if(i == TRY_NUMBER)
+	{
+		std::cerr << "Too many tries... abort." << std::endl;
+	}
+	else
+	{
+		part->ComputeResults();
+
+		outPacket << fractalId;
+		part->SerializeResult(outPacket);
+		
+		for(i = 0; i < TRY_NUMBER; ++i)
+		{
+			if(socket->socket->send(outPacket) != sf::Socket::Done)
+			{
+				std::cerr << "Cannot send data to master..." << std::endl;
+				if(i+1 != TRY_NUMBER)
+					std::cerr << "Try n " << (i+2) << "/" << TRY_NUMBER << std::endl;
+			}
+			else
+				break;
+		}
+		delete part;
+		
+		if(i != TRY_NUMBER)
+		{
+			std::cout << "Data sent to master! Job done!" << std::endl;
+		}
+	}
+
 	socket->socket->disconnect();
 }
 

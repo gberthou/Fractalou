@@ -133,8 +133,12 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 
 	params->socket->app->LockFractal();	
 	jobList = params->socket->jobList; //Get the job list
+	
+	JobList::LockEmpty();
 	if(!JobList::empty)
 	{
+		JobList::UnlockEmpty();
+
 		part = jobList->GetPart(); // Get the current job part
 		params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
 
@@ -169,9 +173,16 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 					std::cout << "Job finished." << std::endl;
 
 					params->socket->app->OnPartComplete(part->GetResults());
-					
+				
+					JobList::LockEmpty();	
 					if(jobList != 0 && !JobList::empty)
+					{
+						JobList::UnlockEmpty();
 						delete jobList;
+						params->socket->app->SetJobAvailability(!JobList::empty);
+					}
+					else
+						JobList::UnlockEmpty();
 				}
 				else
 					std::cout << "Received result for old fractal..." << std::endl;
@@ -185,6 +196,8 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 	}
 	else
 	{
+		JobList::UnlockEmpty();
+
 		params->socket->jobList = 0;
 		params->socket->app->UnlockFractal();	
 	}

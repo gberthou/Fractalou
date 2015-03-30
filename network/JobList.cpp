@@ -1,13 +1,16 @@
 #include "JobList.h"
 
 bool JobList::empty = false;
+sf::Mutex JobList::mtxEmpty;
 
 JobList::JobList(JobList *parent, sf::Uint32 afractalId, FractalPart *p):
 	fractalId(afractalId),
 	part(p)
 {
+	mtxEmpty.lock();
 	empty = false;
-	
+	mtxEmpty.unlock();
+
 	if(parent != 0) // Insert
 	{
 		next = parent->next;
@@ -38,7 +41,9 @@ JobList::~JobList()
 	}
 	else
 	{
+		mtxEmpty.lock();
 		empty = true;
+		mtxEmpty.unlock();
 	}
 }
 
@@ -56,3 +61,14 @@ JobList *JobList::GetNext(void) const
 {
 	return next;
 }
+
+void JobList::LockEmpty(void)
+{
+	mtxEmpty.lock();
+}
+
+void JobList::UnlockEmpty(void)
+{
+	mtxEmpty.unlock();
+}
+
