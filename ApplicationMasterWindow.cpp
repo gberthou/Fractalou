@@ -70,7 +70,7 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 
 ApplicationMasterWindow::ApplicationMasterWindow():
 	window(sf::VideoMode(WINDOW_W,WINDOW_H), "Fractalou", sf::Style::Default),
-	view(0), hud(true)
+	view(0)
 {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
@@ -86,6 +86,7 @@ ApplicationMasterWindow::~ApplicationMasterWindow()
 
 bool ApplicationMasterWindow::Run(bool)
 {
+	bool hud = true;
 	FractalContext context = {
 		Quaternion(0, 0, 0, 0),
 		500.,

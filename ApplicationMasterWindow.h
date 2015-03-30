@@ -31,7 +31,6 @@ class ApplicationMasterWindow : public ApplicationMaster
 		sf::RenderWindow window;
 		sf::Font font;
 		FractalViewWindow *view;
-		bool hud;
 };
 
 #endif
