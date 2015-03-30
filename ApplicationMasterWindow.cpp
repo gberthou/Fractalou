@@ -106,7 +106,7 @@ bool ApplicationMasterWindow::Run(bool)
 	while(window.isOpen())
 	{
         sf::Event event;
-        Fractal *newFractal = 0;
+        bool newContext = false;
 		
 		while (window.pollEvent(event))
         {
@@ -137,7 +137,7 @@ bool ApplicationMasterWindow::Run(bool)
 						if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
 							context.itMax/=2.;
 
-						newFractal = buildJuliaFractal(++fractalId, &context);
+						newContext = true;
 					}
 					break;
 				case sf::Event::Closed:
@@ -155,7 +155,7 @@ bool ApplicationMasterWindow::Run(bool)
 						Quaternion q(x / context.zoom, y / context.zoom, 0., 0.);
 						context.center = context.center + q;
 
-						newFractal = buildJuliaFractal(++fractalId, &context);
+						newContext = true;
 					}
 					break;
 				default:
@@ -167,9 +167,9 @@ bool ApplicationMasterWindow::Run(bool)
 		displayHUD(&context);
 		window.display();
 
-		if(newFractal != 0) // User requested a new fractal
+		if(newContext) // User requested a new fractal
 		{
-			replaceFractal(newFractal);
+			replaceFractal(buildJuliaFractal(++fractalId, &context));
 		}
 
 		mtxUpdate.lock();
