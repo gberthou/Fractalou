@@ -24,7 +24,7 @@ class FractalPart
 		// AddSuite: adds the given suite to the suite collection
 		void AddSuite(QuaternionSuite *suite);
 
-		ResultCollection& GetResults();
+		const ResultCollection& GetResults(void) const;
 
 		// SetResults: Used by the master
 		void SetResults(const ResultCollection &r);

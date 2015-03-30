@@ -50,3 +50,13 @@ bool ApplicationMaster::Run(bool blocking)
 	return true;
 }
 
+void ApplicationMaster::LockFractal(void)
+{
+	mtxFractal.lock();
+}
+
+void ApplicationMaster::UnlockFractal(void)
+{
+	mtxFractal.unlock();
+}
+

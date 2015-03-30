@@ -53,7 +53,7 @@ std::string FractalPart::ToString()
 	return ttos(suites.size()) + " " + ttos(results.size()) + " " ;
 }
 
-ResultCollection& FractalPart::GetResults()
+const ResultCollection& FractalPart::GetResults(void) const
 {
 	return results;
 }

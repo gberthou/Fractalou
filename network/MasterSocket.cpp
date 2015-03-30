@@ -40,7 +40,6 @@ void MasterSocket::UpdateJobList(Fractal *f)
 {
 	const FractalPartCollection &parts = f->GetParts();
 	
-	mtxJob.lock();
 	fractal = f;
 
 	if(parts.size() > 0)
@@ -54,7 +53,6 @@ void MasterSocket::UpdateJobList(Fractal *f)
 			tmp = new JobList(tmp, fractal->GetId(), parts[i]);
 		}
 	}
-	mtxJob.unlock();
 }
 
 void MasterSocket::Run(void)
@@ -132,17 +130,17 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 	sf::Packet outPacket;
 	FractalPart *part;
 	JobList* jobList;
-	
-	params->socket->mtxJob.lock();
+
+	params->socket->app->LockFractal();	
 	jobList = params->socket->jobList; //Get the job list
 	if(!JobList::empty)
 	{
 		part = jobList->GetPart(); // Get the current job part
 		params->socket->jobList = jobList->GetNext(); // Let's rotate the list!
-		params->socket->mtxJob.unlock();
 
 		outPacket << jobList->GetFractalId();
 		part->SerializeTask(outPacket);
+		params->socket->app->UnlockFractal();
 
 		if((st = params->ct->socket->send(outPacket)) != sf::Socket::Done)
 		{
@@ -163,22 +161,21 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 				sf::Uint32 slaveFractalId;
 				packetResult >> slaveFractalId;
 
+				params->socket->app->LockFractal();
 				if(slaveFractalId == params->socket->fractal->GetId())
 				{
 					part->DeserializeResult(packetResult);
 					
 					std::cout << "Job finished." << std::endl;
-					std::cout << part->ToString() << std::endl;
 
-					params->socket->app->OnPartComplete(part);
+					params->socket->app->OnPartComplete(part->GetResults());
 					
-					params->socket->mtxJob.lock();
 					if(jobList != 0 && !JobList::empty)
 						delete jobList;
-					params->socket->mtxJob.unlock();
 				}
 				else
 					std::cout << "Received result for old fractal..." << std::endl;
+				params->socket->app->UnlockFractal();
 			}
 		}
 		params->socket->mtxClients.lock();
@@ -189,7 +186,7 @@ void MasterSocket::clientRoutine(ClientRoutineParams *params)
 	else
 	{
 		params->socket->jobList = 0;
-		params->socket->mtxJob.unlock();
+		params->socket->app->UnlockFractal();	
 	}
 }
 
