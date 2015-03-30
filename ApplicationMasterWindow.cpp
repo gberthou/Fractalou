@@ -70,7 +70,7 @@ static FractalViewWindow *testJuliaLocalWindowed(sf::RenderWindow* window, const
 
 ApplicationMasterWindow::ApplicationMasterWindow():
 	window(sf::VideoMode(WINDOW_W,WINDOW_H), "Fractalou", sf::Style::Default),
-	view(0)
+	view(0), hud(true)
 {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
@@ -137,6 +137,10 @@ bool ApplicationMasterWindow::Run(bool)
 
 						replaceFractal(buildJuliaFractal(++fractalId, &context));
 					}
+					else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
+					{
+						hud = !hud;
+					}
 					break;
 				case sf::Event::Closed:
 					window.close();
@@ -162,7 +166,7 @@ bool ApplicationMasterWindow::Run(bool)
         }
 
 		view->Display();
-		displayHUD(&context);
+		if(hud) displayHUD(&context);
 		window.display();
 
 		mtxUpdate.lock();
