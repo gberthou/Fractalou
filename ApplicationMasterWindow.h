@@ -16,13 +16,13 @@ class ApplicationMasterWindow : public ApplicationMaster
 		virtual ~ApplicationMasterWindow();
 
 		virtual bool Run(bool blocking);
-		virtual void OnPartComplete(FractalPart *part);
+		virtual void OnPartComplete(const ResultCollection &results);
 	
 	protected:
 		void replaceFractal(Fractal *fractal);
 		void displayHUD(const FractalContext *context);
 		
-		std::vector<FractalPart*> partsToUpdate;
+		std::vector<ResultCollection> partsToUpdate;
 
 		// Synchronization
 		sf::Mutex mtxUpdate;

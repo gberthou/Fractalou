@@ -60,12 +60,11 @@ void FractalViewWindow::BuildImage(void)
 	texture.update(pixels);
 }
 
-void FractalViewWindow::UpdatePart(FractalPart *part)
+void FractalViewWindow::UpdatePart(const ResultCollection &results)
 {
-	ResultCollection result = part->GetResults();
 	ResultCollection::const_iterator it;
 
-	for(it = result.begin(); it != result.end(); ++it)
+	for(it = results.begin(); it != results.end(); ++it)
 	{
 		sf::Uint32 id = it->first;
 		double a = it->second;

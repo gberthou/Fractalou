@@ -29,12 +29,14 @@ class MasterSocket
 		MasterSocket(ApplicationMaster *application, Fractal *fractal);
 		virtual ~MasterSocket();
 
+		// Initialize is NOT thread-safe! (and has to be)
 		bool Initialize(void);
 		void Run(void);
 		void WaitForEnd(void);
 
 		void CheckThreads(void);
 
+		// UpdateJobList is NOT thread-safe! (and has to be)
 		void UpdateJobList(Fractal *fractal);
 		
 		unsigned short GetListenerPort(void) const;
@@ -53,7 +55,6 @@ class MasterSocket
 		// Synchronization
 		sf::Thread *threadAuth;
 		std::vector<ClientThread*> clientThreads;
-		sf::Mutex mtxJob;
 		sf::Mutex mtxClients;
 };
 

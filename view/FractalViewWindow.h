@@ -14,7 +14,7 @@ class FractalViewWindow : public FractalView
         
         bool Initialize(void);
         void BuildImage(void);
-		void UpdatePart(FractalPart *part);
+		void UpdatePart(const ResultCollection &results);
    
     protected:
         sf::RenderWindow* window;

@@ -25,15 +25,21 @@ class ApplicationMaster : public Application
 		virtual bool Run(bool blocking);
 		virtual void WaitForEnd(void);
 		
-		virtual void OnPartComplete(FractalPart *part) = 0;
+		virtual void OnPartComplete(const ResultCollection &results) = 0;
+
+		void LockFractal(void);
+		void UnlockFractal(void);
 
 	protected:
 		sf::Uint32 fractalId;
 		Fractal *fractal;
 		MasterSocket *socket;
+	
 	private:	
 		MasterBonjour *bonjour;
-
+		
+		// Synchronization
+		sf::Mutex mtxFractal;
 };
 
 #endif

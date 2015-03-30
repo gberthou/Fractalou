@@ -92,7 +92,7 @@ bool ApplicationMasterWindow::Run(bool)
 		100.,
 		100
 	};
-	std::vector<FractalPart*>::const_iterator it;
+	std::vector<ResultCollection>::const_iterator it;
 
 	fractal = buildJuliaFractal(fractalId, &context);
 	view = testJuliaLocalWindowed(&window, fractal);
@@ -182,23 +182,27 @@ bool ApplicationMasterWindow::Run(bool)
 	return true;
 }
 
-void ApplicationMasterWindow::OnPartComplete(FractalPart *part)
+void ApplicationMasterWindow::OnPartComplete(const ResultCollection &results)
 {
 	// Put here some code to be called when the given part is complete
 
 	mtxUpdate.lock();
-	partsToUpdate.push_back(part);
+	partsToUpdate.push_back(results);
 	mtxUpdate.unlock();
 }
 
 void ApplicationMasterWindow::replaceFractal(Fractal *f)
 {
 	delete view;
-	//delete fractal;
+	
+	LockFractal();
+	delete fractal;
+	
 	fractal = f;	
 	view = testJuliaLocalWindowed(&window, fractal);
 
 	socket->UpdateJobList(fractal);
+	UnlockFractal();
 
 	window.clear();
 }
